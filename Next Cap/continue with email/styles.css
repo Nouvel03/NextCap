@@ -20,6 +20,81 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 380px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.login-container.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Ensure first card is visible on load */
+#email-card {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Slide animations */
+.slide-out-right {
+    animation: slideOutRight 0.3s ease forwards;
+}
+
+.slide-out-left {
+    animation: slideOutLeft 0.3s ease forwards;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.3s ease forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.3s ease forwards;
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateX(-100%);
+    }
+}
+
+@keyframes slideOutLeft {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateX(100%);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(0);
+    }
 }
 
 .back-button {
@@ -73,18 +148,30 @@ label {
     font-weight: 500;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="email"],
+input[type="password"] {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
     color: #000000;
+    transition: border-color 0.2s;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
     outline: none;
     border-color: #F4B932;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+    min-height: 16px;
 }
 
 .continue-btn {
@@ -101,8 +188,13 @@ input[type="text"]:focus {
     transition: background-color 0.2s;
 }
 
-.continue-btn:hover {
+.continue-btn:hover:not(:disabled) {
     background-color: #e5a82d;
+}
+
+.continue-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .divider {
@@ -170,6 +262,45 @@ input[type="text"]:focus {
 .code-link a {
     color: #333;
     text-decoration: underline;
+    font-weight: 600;
+}
+
+.resend-code {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin-top: 15px;
+}
+
+.resend-code a {
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.resend-code a:hover {
+    text-decoration: underline;
+}
+
+.code-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.code-input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #000000;
+    text-align: center;
+    letter-spacing: 8px;
     font-weight: 600;
 }
 
