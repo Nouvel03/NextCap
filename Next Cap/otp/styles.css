@@ -1,0 +1,183 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    padding: 5px;
+}
+
+
+
+.login-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 380px;
+    margin: 5px;
+}
+
+.back-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 1px solid #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.back-button:hover {
+    background-color: #f9f9f9;
+}
+
+.back-button img {
+    width: 20px;
+    height: 20px;
+}
+
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: 600;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.4;
+}
+
+.code-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.code-input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #000000;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background-color 0.2s;
+}
+
+.login-btn:hover {
+    background-color: #f9f9f9;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.register-btn {
+    background-color: #F4B932;
+    border: none;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.register-btn:hover {
+    background-color: #e5a82d;
+}
+
+.divider {
+    text-align: center;
+    margin: 20px 0;
+    color: #999;
+    font-size: 13px;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+.resend-code {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+}
+
+.resend-code a {
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.bottom-shapes {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    pointer-events: none;
+}
+
+.logo{
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+.cap{
+    position: absolute;
+    top: 87px;
+    right: 32.3em;
+}
