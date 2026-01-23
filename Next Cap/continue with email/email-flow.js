@@ -1,4 +1,3 @@
-
 let currentCard = 'email';
 let userEmail = '';
 let lastOTP = '';
@@ -196,20 +195,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Enter') otpContinueBtn.click();
     });
 
-    // ================================
-    // PASSWORD CARD HANDLER
-    // ================================
     passwordContinueBtn.addEventListener('click', async function() {
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
-
+    
         passwordError.textContent = '';
         confirmPasswordError.textContent = '';
         passwordInput.style.borderColor = '#ddd';
         confirmPasswordInput.style.borderColor = '#ddd';
-
+    
         let hasError = false;
-
+    
         if (!password) {
             passwordError.textContent = 'Please enter a password';
             passwordInput.style.borderColor = '#e74c3c';
@@ -219,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordInput.style.borderColor = '#e74c3c';
             hasError = true;
         }
-
+    
         if (!confirmPassword) {
             confirmPasswordError.textContent = 'Please confirm your password';
             confirmPasswordInput.style.borderColor = '#e74c3c';
@@ -229,22 +225,30 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmPasswordInput.style.borderColor = '#e74c3c';
             hasError = true;
         }
-
+    
         if (hasError) return;
-
+    
         passwordContinueBtn.disabled = true;
         passwordContinueBtn.textContent = 'Creating Account...';
-
-        // try {
-        //     await createUserAccount(userEmail, password, '');
-        //     alert('Account created successfully!');
-        // } catch (error) {a
-        //     console.error('Create account error:', error);
-        //     passwordError.textContent = 'Failed to create account. Please try again.';
-        // } finally {
-        //     passwordContinueBtn.disabled = false;
-        //     passwordContinueBtn.textContent = 'Create Account';
-        // }
+    
+        try {
+            // Save user info in Firestore USERS collection (no Auth)
+            const { success, message } = await saveUserToFirestore(userEmail, password);
+        
+            if (success) {
+                alert('Account created successfully!');
+                // Optionally, redirect to login/dashboard
+                // window.location.href = '../Login page/nextcap_login.html';
+            } else {
+                passwordError.textContent = message || 'Failed to create account. Please try again.';
+            }
+        } catch (error) {
+            console.error('Create account error:', error);
+            passwordError.textContent = 'Failed to create account. Please try again.';
+        } finally {
+            passwordContinueBtn.disabled = false;
+            passwordContinueBtn.textContent = 'Create Account';
+        }
     });
 
     // ================================

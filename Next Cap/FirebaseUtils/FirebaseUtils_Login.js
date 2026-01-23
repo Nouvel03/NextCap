@@ -1,12 +1,14 @@
-// FirebaseUtils.js
-// Firebase configuration and utilities for NextCap
-// Using Firebase v10 COMPAT (works with Live Server)
+// FirebaseUtils_Login.js
+// Fully working Firebase utilities for NextCap registration
+// Using Firestore only (no Auth), password encrypted with crypter.js
+
+import { encrypt, decrypt } from "../crypter.js"; // your crypter file
 
 // ================================
 // FIREBASE INITIALIZATION
 // ================================
 
-firebase.initializeApp({
+const firebaseConfig = {
   apiKey: "AIzaSyDVlX0vRgMqDNyzPPeebJxv5AFF-ZBkqbI",
   authDomain: "nextcap-325c5.firebaseapp.com",
   projectId: "nextcap-325c5",
@@ -14,62 +16,44 @@ firebase.initializeApp({
   messagingSenderId: "40961580759",
   appId: "1:40961580759:web:29ca52a731ee5f8408da92",
   measurementId: "G-C3592LXZQC"
-});
+};
 
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-console.log("Firebase initialized (COMPAT)");
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore(); // Firestore reference
+console.log("Firebase initialized");
 
 // ================================
 // OTP FUNCTIONS
 // ================================
 
-/**
- * Generate a random 6-digit OTP
- * @returns {string}
- */
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-/**
- * Send OTP to any email (no user check, always sends)
- * @param {string} email
- * @returns {Promise<{ success: boolean, otp: string }>}
- */
 async function sendOTPToEmail(email) {
   try {
     const otp = generateOTP();
-
     const expiresAt = firebase.firestore.Timestamp.fromDate(
-      new Date(Date.now() + 10 * 60 * 1000) // 10 minutes expiry
+      new Date(Date.now() + 10 * 60 * 1000) // 10 min
     );
 
     await db.collection("otpCodes").add({
-      email: email,
+      email,
       code: otp,
-      expiresAt: expiresAt,
+      expiresAt,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       used: false
     });
 
-    // TEMP: log OTP for testing
     console.log(`OTP for ${email}: ${otp}`);
-
     return { success: true, otp };
-  } catch (error) {
-    console.error("sendOTPToEmail error:", error);
+  } catch (err) {
+    console.error("sendOTPToEmail error:", err);
     return { success: false, otp: null };
   }
 }
 
-/**
- * Verify OTP code
- * @param {string} email
- * @param {string} otpCode
- * @returns {Promise<boolean>}
- */
 async function verifyOTPCode(email, otpCode) {
   try {
     const snapshot = await db
@@ -84,55 +68,55 @@ async function verifyOTPCode(email, otpCode) {
     const doc = snapshot.docs[0];
     const data = doc.data();
 
-    if (data.expiresAt.toDate() < new Date()) {
-      return false;
-    }
+    if (data.expiresAt.toDate() < new Date()) return false;
 
     await doc.ref.update({ used: true });
     return true;
-  } catch (error) {
-    console.error("verifyOTPCode error:", error);
+  } catch (err) {
+    console.error("verifyOTPCode error:", err);
     return false;
   }
 }
 
 // ================================
-// USER CREATION
+// USERS COLLECTION FUNCTIONS
 // ================================
 
-/**
- * Create Firebase Auth user and Firestore profile
- * @param {string} email
- * @param {string} password
- * @param {string} displayName
- */
-async function createUserAccount(email, password, displayName) {
+async function saveUserToFirestore(email, password) {
   try {
-    const userCredential =
-      await auth.createUserWithEmailAndPassword(email, password);
+    const encryptedPassword = encrypt(password); // encrypt using your crypter
 
-    await userCredential.user.updateProfile({
-      displayName: displayName
-    });
+    const usersRef = db.collection("USERS");
 
-    await db.collection("users").doc(userCredential.user.uid).set({
-      email: email,
-      displayName: displayName,
+    // check if user exists
+    const snapshot = await usersRef.where("email", "==", email).get();
+    if (!snapshot.empty) {
+      console.log("User already exists:", email);
+      return { success: false, message: "User already exists" };
+    }
+
+    // save new user
+    await usersRef.add({
+      email,
+      password: encryptedPassword,
+      applied_scholarships: [],
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    return userCredential.user;
-  } catch (error) {
-    console.error("createUserAccount error:", error);
-    throw error;
+    console.log("User saved:", email);
+    return { success: true };
+  } catch (err) {
+    console.error("saveUserToFirestore error:", err);
+    return { success: false, message: err.message };
   }
 }
 
 // ================================
-// EXPOSE FUNCTIONS GLOBALLY
+// EXPORT / GLOBAL
 // ================================
 
+window.db = db; // if you need global db
 window.generateOTP = generateOTP;
 window.sendOTPToEmail = sendOTPToEmail;
 window.verifyOTPCode = verifyOTPCode;
-window.createUserAccount = createUserAccount;
+window.saveUserToFirestore = saveUserToFirestore;
