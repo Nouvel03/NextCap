@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
           window.location.href = '../Information/information.html';
         } else {
           alert('Your account profile is already completed.');
-        }
+        } 
       } else {
         showError(passErr, 'Incorrect password');
       }
