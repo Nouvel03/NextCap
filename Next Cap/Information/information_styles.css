@@ -1,0 +1,547 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: white;
+    padding: 1.25rem 1.875rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Decorative cap/logo to match login page */
+/* Use the site logo image in the header beside the brand text */
+.logo {
+    background: transparent;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+}
+
+.logo::before { display: none; }
+
+.logo-gear { display: none; }
+
+.site-logo {
+
+}
+
+@media (max-width: 480px) {
+    .site-logo { width: 72px; }
+}
+
+logo{
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+.logo::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 25px solid #f4a624;
+    position: absolute;
+    top: -20px;
+}
+
+.logo-gear {
+    width: 35px;
+    height: 35px;
+    background: #1a5f7a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.brand-info h1 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: #1a5f7a;
+    margin-bottom: 0.3rem;
+}
+
+.brand-info p {
+    font-size: clamp(0.75rem, 2vw, 0.875rem);
+    color: #666;
+}
+
+.progress-container {
+    background: white;
+    padding: clamp(1rem, 3vw, 1.875rem);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    text-align: right;
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+    font-weight: 600;
+    color: #1a5f7a;
+    margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 2vw, 1.25rem);
+    margin-top: 1.25rem;
+    flex-wrap: nowrap;
+}
+
+.step {
+    width: clamp(40px, 8vw, 50px);
+    height: clamp(40px, 8vw, 50px);
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #666;
+    position: relative;
+    z-index: 2;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+}
+
+.step.active {
+    background: #17a2b8;
+    color: white;
+}
+
+.step.completed {
+    background: #17a2b8;
+    color: white;
+}
+
+.progress-line {
+    width: clamp(30px, 8vw, 80px);
+    height: 4px;
+    background: #e0e0e0;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+.progress-line.completed {
+    background: #17a2b8;
+}
+
+.form-card {
+    background: white;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: none;
+    animation: fadeOut 0.3s ease-out;
+}
+
+.form-card.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+}
+
+.form-card.slide-back {
+    animation: slideBack 0.3s ease-in;
+}
+
+@keyframes slideBack {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.form-title {
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+    font-weight: 600;
+    color: #333;
+}
+
+.save-icon {
+    color: #17a2b8;
+    cursor: pointer;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    flex-shrink: 0;
+}
+
+.form-subtitle {
+    color: #666;
+    margin-bottom: 1.875rem;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.875rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-size: clamp(0.813rem, 2vw, 0.875rem);
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+input {
+    padding: 0.75rem 0.938rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: clamp(0.813rem, 2vw, 0.875rem);
+    transition: border-color 0.3s;
+    width: 100%;
+}
+
+/* Style selects and specialized inputs to match the form UI */
+select, input[type="date"], input[type="number"], input[type="tel"] {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+    color: #333;
+    width: 100%;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Financial status select specific styling (spinner) */
+#financialStatus {
+    background-color: #fff;
+    border: 1px solid #e6c17a;
+    padding: 12px 18px;
+    border-radius: 10px;
+    color: #333;
+    font-weight: 600;
+    background-image: linear-gradient(45deg, transparent 50%, #666 50%), linear-gradient(135deg, #666 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(50% - 6px), calc(100% - 12px) calc(50% - 6px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+}
+
+/* Make the select arrow area clickable and preserve padding */
+#financialStatus::-ms-expand { display: none; }
+
+@media (max-width: 480px) {
+    select, input[type="date"], input[type="number"], input[type="tel"] { padding: 10px 12px; }
+}
+
+input::placeholder {
+    color: #aaa;
+}
+
+input:focus {
+    outline: none;
+    border-color: #17a2b8;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.terms {
+    font-size: clamp(0.688rem, 1.8vw, 0.75rem);
+    color: #666;
+    flex: 1;
+    min-width: 200px;
+}
+
+.terms a {
+    color: #17a2b8;
+    text-decoration: none;
+}
+
+.btn-next {
+    background: #f4a624;
+    color: #333;
+    border: none;
+    padding: 0.75rem clamp(2rem, 5vw, 3.125rem);
+    border-radius: 5px;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+.btn-next:hover {
+    background: #e09515;
+}
+
+.btn-back {
+    background: transparent;
+    color: #17a2b8;
+    border: 2px solid #17a2b8;
+    padding: 0.75rem clamp(2rem, 5vw, 3.125rem);
+    border-radius: 5px;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.btn-back:hover {
+    background: #17a2b8;
+    color: white;
+}
+
+.button-group {
+    display: flex;
+    gap: 0.938rem;
+    flex-wrap: wrap;
+}
+
+/* Extra small devices (phones, less than 576px) */
+@media (max-width: 575px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .header {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .logo {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+    }
+
+    .logo::before {
+        border-left: 25px solid transparent;
+        border-right: 25px solid transparent;
+        border-bottom: 20px solid #f4a624;
+        top: -16px;
+    }
+
+    .logo-gear {
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .form-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .terms {
+        text-align: center;
+        min-width: 100%;
+    }
+
+    .button-group {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .btn-next,
+    .btn-back {
+        width: 100%;
+        padding: 0.875rem;
+    }
+
+    .progress-bar {
+        gap: 0.5rem;
+    }
+
+    .step {
+        width: 35px;
+        height: 35px;
+        min-width: 35px;
+        min-height: 35px;
+        font-size: 0.875rem;
+    }
+
+    .progress-line {
+        width: 20px;
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .header {
+        padding: 1.25rem;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .form-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+}
+
+/* Very small screens (less than 360px) */
+@media (max-width: 359px) {
+    .step {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        min-height: 30px;
+        font-size: 0.75rem;
+    }
+
+    .progress-line {
+        width: 15px;
+    }
+
+    .form-card {
+        padding: 1rem;
+    }
+}
+
+/* Landscape orientation for mobile devices */
+@media (max-height: 500px) and (orientation: landscape) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .header {
+        margin-bottom: 1rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .progress-container {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .section-title {
+        margin-bottom: 1rem;
+    }
+
+    .form-card {
+        padding: 1.5rem;
+    }
+
+    .form-header {
+        margin-bottom: 1rem;
+    }
+
+    .form-subtitle {
+        margin-bottom: 1rem;
+    }
+
+    .form-grid {
+        margin-bottom: 1rem;
+    }
+
+    .form-footer {
+        margin-top: 1.5rem;
+    }
+}

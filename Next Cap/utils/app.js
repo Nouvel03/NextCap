@@ -109,13 +109,13 @@ function handleGoogleTokenResponse(tokenResponse) {
 
 // Navigation functions
 function navigateToEmailPage() {
-    window.location.href = '../continue with email/continue with email.html';
+    window.location.href = encodeURI('../continue with email/continue with email.html');
 }
 
-function navigateToRegister() {
-    console.log('Register page navigation - to be implemented');
-    alert('Register functionality coming soon');
+function navigateToLoginWithEmail() {
+    window.location.href = encodeURI('../login with email/login_with_email.html');
 }
+
 
 function navigateBack() {
     if (window.history.length > 1) {
@@ -132,17 +132,20 @@ document.addEventListener('DOMContentLoaded', function() {
         googleBtn.setAttribute('data-wired', 'true');
     }
     
-    const emailBtn = document.querySelector('.login-btn:not(.google-btn):not(.register-btn)');
-    if (emailBtn && emailBtn.textContent.trim().includes('email') && !emailBtn.hasAttribute('data-wired')) {
-        emailBtn.addEventListener('click', navigateToEmailPage);
-        emailBtn.setAttribute('data-wired', 'true');
+    // Wire specific buttons by id to avoid ambiguous selectors when multiple email buttons exist
+    const signupBtn = document.getElementById('email-signup-btn');
+    if (signupBtn && !signupBtn.hasAttribute('data-wired')) {
+        signupBtn.addEventListener('click', navigateToEmailPage);
+        signupBtn.setAttribute('data-wired', 'true');
+    }
+
+    const emailLoginBtn = document.getElementById('email-login-btn');
+    if (emailLoginBtn && !emailLoginBtn.hasAttribute('data-wired')) {
+        emailLoginBtn.addEventListener('click', navigateToLoginWithEmail);
+        emailLoginBtn.setAttribute('data-wired', 'true');
     }
     
-    const registerBtn = document.querySelector('.register-btn');
-    if (registerBtn && !registerBtn.hasAttribute('data-wired')) {
-        registerBtn.addEventListener('click', navigateToRegister);
-        registerBtn.setAttribute('data-wired', 'true');
-    }
+    // Register button removed; no wiring necessary
     
     const backBtn = document.querySelector('.back-button');
     if (backBtn && !backBtn.hasAttribute('data-wired')) {

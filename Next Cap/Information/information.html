@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextCap - Scholarship Application</title>
+    <link rel="stylesheet" href="../Information/information_styles.css">
+
+    <!-- Firebase SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase utilities (loads Firestore and exposes helpers) -->
+    <script type="module" src="../FirebaseUtils/FirebaseUtils_Login.js"></script>
+
+    <script src="../Information/information_script.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img class="site-logo" src="../Login page/images/Group 21.svg" alt="NextCap logo">
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="section-title" id="sectionTitle">Personal Information</div>
+            <div class="progress-bar">
+                <div class="step active" data-step="1">1</div>
+                <div class="progress-line"></div>
+                <div class="step" data-step="2">2</div>
+                <div class="progress-line"></div>
+                <div class="step" data-step="3">3</div>
+            </div>
+        </div>
+
+        <!-- Page 1: Personal Information -->
+        <div class="form-card active" data-page="1">
+            <div class="form-header">
+                <h2 class="form-title">Complete Your Profile</h2>
+                <span class="save-icon">💾</span>
+            </div>
+            <p class="form-subtitle">Complete your profile to start applying for scholarships with ease</p>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" placeholder="e.g weinerbuns67">
+                </div>
+                <div class="form-group">
+                    <label for="middleName">Middle Name</label>
+                    <input type="text" id="middleName" placeholder="e.g weinerbuns67">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" placeholder="e.g weinerbuns67">
+                </div>
+
+                <div class="form-group">
+                    <label for="birthday">Birthday</label>
+                    <input type="date" id="birthday" placeholder="" max="">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender">
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Non-binary">Non-binary</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nationality">Nationality / Citizenship</label>
+                    <input type="text" id="nationality" placeholder="e.g weinerbuns67">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Current Address</label>
+                    <input type="text" id="address" placeholder="e.g 123 Example St" autocomplete="street-address">
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="tel" id="contact" placeholder="e.g 09171234567" inputmode="numeric" pattern="[0-9]{7,15}" title="Enter 7 to 15 digits">
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <div class="terms">
+                    By continuing, you agree to NextCap's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                </div>
+                <div class="button-group">
+                    <button class="btn-next" onclick="nextPage()">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: Education Information -->
+        <div class="form-card" data-page="2">
+            <div class="form-header">
+                <h2 class="form-title">Complete Your Profile</h2>
+                <span class="save-icon">💾</span>
+            </div>
+            <p class="form-subtitle">Complete your profile to start applying for scholarships with ease</p>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="school">Current School / University</label>
+                    <input type="text" id="school" placeholder="e.g University of Example" autocomplete="organization">
+                </div>
+                <div class="form-group">
+                    <label for="schoolAddress">School Address</label>
+                    <input type="text" id="schoolAddress" placeholder="e.g 123 Example St" autocomplete="street-address">
+                </div>
+                <div class="form-group">
+                    <label for="educationLevel">Education Level</label>
+                    <select id="educationLevel">
+                        <option value="">Select level</option>
+                        <option value="Senior High">Senior High</option>
+                        <option value="Undergraduate">Undergraduate</option>
+                        <option value="Graduate">Graduate</option>
+                        <option value="Postgraduate">Postgraduate</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="course">Course / Strand / Program</label>
+                    <input type="text" id="course" placeholder="e.g Computer Science" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="yearLevel">Year Level</label>
+                    <input type="number" id="yearLevel" min="1" max="10" step="1" placeholder="e.g 3">
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <div class="terms">
+                    By continuing, you agree to NextCap's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                </div>
+                <div class="button-group">
+                    <button class="btn-back" onclick="prevPage()">Back</button>
+                    <button class="btn-next" onclick="nextPage()">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: Academic Records -->
+        <div class="form-card" data-page="3">
+            <div class="form-header">
+                <h2 class="form-title">Complete Your Profile</h2>
+                <span class="save-icon">💾</span>
+            </div>
+            <p class="form-subtitle">Complete your profile to start applying for scholarships with ease</p>
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="gwa">Current GWA (General Weighted Average)</label>
+                    <input type="number" id="gwa" step="0.01" min="0" max="5" placeholder="e.g 1.75">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="financialStatus">Current Financial Status</label>
+                    <select id="financialStatus">
+                        <option value="">Select financial status</option>
+                        <option value="Low Income">Low Income</option>
+                        <option value="Middle Income">Middle Income</option>
+                        <option value="High Income">High Income</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="estimatedSalary">Estimated Family Salary (Monthly)</label>
+                    <input type="number" id="estimatedSalary" step="100" min="0" placeholder="e.g 20000">
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <div class="terms">
+                    By continuing, you agree to NextCap's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                </div>
+                <div class="button-group">
+                    <button class="btn-back" onclick="prevPage()">Back</button>
+                    <button class="btn-next" onclick="nextPage()">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

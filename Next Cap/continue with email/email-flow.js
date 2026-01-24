@@ -1,6 +1,8 @@
 let currentCard = 'email';
 let userEmail = '';
 let lastOTP = '';
+// Match this to --anim-duration in CSS (milliseconds)
+const ANIM_DURATION = 420;
 
 // Card navigation
 function showCard(cardName, direction = 'right') {
@@ -9,18 +11,29 @@ function showCard(cardName, direction = 'right') {
 
     if (!currentCardEl || !nextCardEl) return;
 
-    currentCardEl.classList.add(`slide-out-${direction}`);
+    // Ensure the next card is visible beneath/above as needed
+    // Make both cards visible so animations can overlap smoothly
+    nextCardEl.classList.add('active');
 
+    // Set z-index so current card is on top during its exit animation
+    currentCardEl.style.zIndex = 3;
+    nextCardEl.style.zIndex = 2;
+
+    // Start both animations: current slides out, next slides in
+    currentCardEl.classList.add(`slide-out-${direction}`);
+    nextCardEl.classList.add(`slide-in-${direction === 'right' ? 'left' : 'right'}`);
+
+    // After the animation finishes, clean up classes and z-indexes
     setTimeout(() => {
         currentCardEl.classList.remove('active', `slide-out-${direction}`);
-        nextCardEl.classList.add('active', `slide-in-${direction === 'right' ? 'left' : 'right'}`);
+        nextCardEl.classList.remove(`slide-in-${direction === 'right' ? 'left' : 'right'}`);
 
-        setTimeout(() => {
-            nextCardEl.classList.remove(`slide-in-${direction === 'right' ? 'left' : 'right'}`);
-        }, 300);
+        // reset inline z-index styles to let CSS stacking return to normal
+        currentCardEl.style.zIndex = '';
+        nextCardEl.style.zIndex = '';
 
         currentCard = cardName;
-    }, 150);
+    }, ANIM_DURATION + 20);
 }
 
 // Generate random 6-digit OTP
@@ -105,6 +118,16 @@ document.addEventListener('DOMContentLoaded', function() {
         emailContinueBtn.textContent = 'Sending OTP...';
 
         try {
+            // Check if email already exists in Firestore (if helper available)
+            if (typeof checkEmailExists === 'function') {
+                const exists = await checkEmailExists(email);
+                if (exists) {
+                    emailError.textContent = 'This email is already registered. Please log in instead.';
+                    emailInput.style.borderColor = '#e74c3c';
+                    return;
+                }
+            }
+
             userEmail = email;
             const { success } = await sendOTPToEmail(email);
 
@@ -236,9 +259,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const { success, message } = await saveUserToFirestore(userEmail, password);
         
             if (success) {
-                alert('Account created successfully!');
-                // Optionally, redirect to login/dashboard
-                // window.location.href = '../Login page/nextcap_login.html';
+
+                // persist the signed-up user's email so the Information page can identify the account
+                try {
+                    localStorage.setItem('nextcap_user_email', userEmail);
+                } catch (e) {
+                    console.warn('Could not persist user email to localStorage', e);
+                }
+
+                window.location.href = '../Information/information.html';
             } else {
                 passwordError.textContent = message || 'Failed to create account. Please try again.';
             }
@@ -259,6 +288,18 @@ document.addEventListener('DOMContentLoaded', function() {
         otpInput.value = '';
         otpError.textContent = '';
     });
+
+    const emailBackBtn = document.getElementById('email-back-btn');
+    if (emailBackBtn) {
+        emailBackBtn.addEventListener('click', function() {
+            // go back to previous page (login page)
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = '../Login page/nextcap_login.html';
+            }
+        });
+    }
 
     document.getElementById('password-back-btn').addEventListener('click', function() {
         showCard('otp', 'left');
