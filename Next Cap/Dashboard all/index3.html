@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholarship Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f8f8;
+        }
+
+        .header {
+            background-color: white;
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            width: 45px;
+            height: 45px;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 14px;
+            background-color: #f7fafc;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #cbd5e0;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 180px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .sidebar-header {
+            padding: 20px 20px 15px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: #f7fafc;
+        }
+
+        .menu-item.active {
+            background-color: #1e40af;
+            color: white;
+            background-color: #1e40af;
+        }
+
+        .menu-item.active .menu-icon {
+            filter: brightness(0) invert(1);
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-header span:first-child {
+            font-size: 14px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar.green .progress-fill {
+            background-color: #48bb78;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #4299e1;
+            transition: width 0.3s;
+        }
+
+        .updates-section {
+            margin-bottom: 30px;
+        }
+
+        .updates-section h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .update-message {
+            background-color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .application-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .application-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .application-section h3 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .application-details .label {
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 14px;
+        }
+
+        .status-list {
+            list-style: none;
+            margin: 15px 0;
+            padding-left: 10px;
+        }
+
+        .status-list li {
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .deadline {
+            color: #e53e3e;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .reminders h4 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .reminder-list {
+            list-style: none;
+        }
+
+        .reminder-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .indicator.yellow {
+            background-color: #f6ad55;
+        }
+
+        .indicator.red {
+            background-color: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="images/logo.svg" alt="Logo" class="logo">
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+        </div>
+        <div class="user-avatar"></div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">Menu</div>
+            <a href="index1.html" class="menu-item">
+                <img src="images/dashboard-svgrepo-com 1.svg" alt="" class="menu-icon">
+                Home
+            </a>
+            <a href="#" class="menu-item active">
+                <img src="images/dashboard-svgrepo-com 2.svg" alt="" class="menu-icon">
+                Dashboard
+            </a>
+            <a href="#" class="menu-item">
+                <img src="images/dashboard-svgrepo-com 1.svg" alt="" class="menu-icon">
+                Information
+            </a>
+            <a href="#" class="menu-item">
+                <img src="images/dashboard-svgrepo-com 1.svg" alt="" class="menu-icon">
+                Profile
+            </a>
+        </div>
+
+        <div class="main-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Profile Completion</span>
+                        <span class="stat-value">80%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Active Applications</span>
+                        <span class="stat-value">3</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Saved Scholarships</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                    <div class="progress-bar green">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Upcoming Deadlines</span>
+                        <span class="stat-value">2</span>
+                    </div>
+                    <div class="progress-bar green">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="updates-section">
+                <h2>Updates</h2>
+                <div class="update-message">
+                    Your application for DOST Scholarship was submitted.
+                </div>
+            </section>
+
+            <div class="application-grid">
+                <div class="application-section">
+                    <h3>My Applications</h3>
+                    <div class="application-details">
+                        <p class="label">Scholarship Name</p>
+                        <p class="label">Status:</p>
+                        <ul class="status-list">
+                            <li>Draft</li>
+                            <li>Submitted</li>
+                            <li>Under Review</li>
+                            <li>Approved / Rejected</li>
+                        </ul>
+                        <p class="deadline">Deadline</p>
+                    </div>
+                </div>
+
+                <div class="application-section">
+                    <h3>Required Actions</h3>
+                    <div class="reminders">
+                        <h4>Reminders</h4>
+                        <ul class="reminder-list">
+                            <li>
+                                <span class="indicator yellow"></span>
+                                Complete your profile (Education Info missing)
+                            </li>
+                            <li>
+                                <span class="indicator yellow"></span>
+                                Upload Proof of Residency
+                            </li>
+                            <li>
+                                <span class="indicator red"></span>
+                                Confirm email to continue applying
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
