@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NextCap - Login with Email</title>
+  <link rel="stylesheet" href="login_with_email.css">
+  <!-- Firebase compat SDKs (same used in your other pages) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div class="logo">
+    <img src="../Login page/images/Group 21.svg" alt="Scholarly Logo">
+  </div>
+
+  <div class="cap">
+    <img src="../Login page/images/Group 11.svg" alt="tilted graduation cap">
+  </div>
+
+  <div class="login-container card active" id="login-card">
+    <button class="back-button" onclick="history.back()">
+      <img src="../Login page/images/back-svgrepo-com (1).svg" alt="Back">
+    </button>
+    <h2>Login with Email</h2>
+    <p class="subtitle">Enter your email and password</p>
+
+    <div class="form-group">
+      <label for="login-email">Email</label>
+      
+      <input type="email" id="login-email" placeholder="your.email@example.com" autocomplete="email">
+      <div class="error-message" id="login-email-error"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password">
+      <div class="error-message" id="login-password-error"></div>
+    </div>
+
+    <button class="continue-btn" id="login-btn">Log in</button>
+    <div class="resend-code"></div>
+  </div>
+
+
+  <!-- Your Firebase init & helpers -->
+  <script type="module" src="../FirebaseUtils/FirebaseUtils_Login.js"></script>
+  <script type="module" src="login_with_email.js"></script>
+</body>
+</html>

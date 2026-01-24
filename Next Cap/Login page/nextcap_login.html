@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>NextCap - Login</title>
+    <!-- Google Identity Services - Required for Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <div class="logo">
@@ -22,22 +24,28 @@
 
         <h2>Log in or sign up in<br>seconds</h2>
         
-        <button class="login-btn google-btn">
+        <button class="login-btn google-btn" id="google-login-btn">
             <img src="images/google-color-svgrepo-com.svg" alt="Google">
             Continue with Google
         </button>
         
-        <button class="login-btn">
-            Continue with email
+        <!-- Sign up with email (opens existing signup flow) -->
+        <button class="login-btn" id="email-signup-btn" onclick="location.href=encodeURI('../continue with email/continue with email.html')">
+            Sign up with email
         </button>
-        
-        <button class="login-btn register-btn">
-            Register
+
+        <!-- Login with email (opens login form in login with email folder) -->
+        <button class="login-btn" id="email-login-btn" onclick="location.href=encodeURI('../login with email/login_with_email.html')">
+            Login with email
         </button>
+
+        <!-- Register removed -->
     </div>
 
     <div class="bottom-shapes">
          <img src="images/Group 19.svg">
     </div>
+
+    <script type="module" src="../utils/app.js"></script>
 </body>
 </html>
