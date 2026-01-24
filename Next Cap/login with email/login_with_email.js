@@ -78,8 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
           // redirect user to complete profile
           window.location.href = '../Information/information.html';
         } else {
-          alert('Your account profile is already completed.');
-        } 
+          // profile exists — redirect to dashboard
+          window.location.href = '../Dashboard all/index1.html';
+        }
       } else {
         showError(passErr, 'Incorrect password');
       }

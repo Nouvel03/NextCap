@@ -1,0 +1,381 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f8f8;
+}
+
+.header {
+    background-color: white;
+    padding: 12px 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.logo {
+    width: 45px;
+    height: 45px;
+}
+
+.search-bar {
+    flex: 1;
+    max-width: 500px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 25px;
+    font-size: 14px;
+    background-color: #f7fafc;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #cbd5e0;
+    border-radius: 50%;
+    margin-left: auto;
+}
+
+.container {
+    display: flex;
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 20px;
+    gap: 20px;
+}
+
+.sidebar {
+    width: 180px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    height: fit-content;
+}
+
+.sidebar-header {
+    padding: 20px 20px 15px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.menu-item:hover {
+    background-color: #f7fafc;
+}
+
+.menu-item.active {
+    background-color: #1e40af;
+    color: white;
+    border-left-color: #4c51bf;
+}
+
+.menu-item.active .menu-icon {
+    filter: brightness(0) invert(1);
+}
+
+.menu-item.nested {
+    padding-left: 52px;
+}
+
+.menu-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.main-content {
+    flex: 1;
+}
+
+.post-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.post-avatar {
+    width: 45px;
+    height: 45px;
+    background-color: #cbd5e0;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.post-info {
+    flex: 1;
+}
+
+.post-info h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.verified-badge {
+    width: 18px;
+    height: 18px;
+    background-color: #4299e1;
+    border-radius: 50%;
+}
+
+.post-date {
+    font-size: 12px;
+    color: #718096;
+    line-height: 1.4;
+}
+
+.post-options {
+    color: #cbd5e0;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.post-body {
+    display: flex;
+    gap: 20px;
+}
+
+.post-left {
+    width: 450px;
+    flex-shrink: 0;
+}
+
+.post-image {
+    width: 100%;
+    height: 240px;
+    background-color: #cbd5e0;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.saved-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background-color: #fef5e7;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #744210;
+    margin-bottom: 8px;
+}
+
+.saved-icon {
+    width: 18px;
+    height: 18px;
+    background-color: #f6ad55;
+    border-radius: 2px;
+}
+
+.slots-info {
+    font-size: 13px;
+    color: #718096;
+    padding-left: 12px;
+}
+
+.post-right {
+    flex: 1;
+}
+
+.post-right h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.post-right p {
+    font-size: 13px;
+    color: #4a5568;
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+
+.info-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 10px;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.tag {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+
+.tag.shs {
+    background-color: #38b2ac;
+}
+
+.tag.college {
+    background-color: #48bb78;
+}
+
+.tag.working {
+    background-color: #4299e1;
+}
+
+.tag.single-parent {
+    background-color: #38b2ac;
+}
+
+.tag.hot-moms {
+    background-color: #38b2ac;
+}
+
+.apply-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #ecc94b;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.apply-btn:hover {
+    background-color: #d69e2e;
+}
+
+.comment-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.comment {
+    display: flex;
+    gap: 12px;
+}
+
+.comment-avatar {
+    width: 38px;
+    height: 38px;
+    background-color: #cbd5e0;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.comment-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.progress-bar {
+    flex: 1;
+    max-width: 140px;
+    height: 6px;
+    background-color: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    width: 85%;
+    height: 100%;
+    background-color: #38b2ac;
+    border-radius: 3px;
+}
+
+.progress-dot {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background-color: #38b2ac;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.comment-options {
+    color: #cbd5e0;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.large-placeholder {
+    width: 100%;
+    height: 280px;
+    background-color: #cbd5e0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.text-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 20px;
+}
+
+.text-line {
+    height: 10px;
+    background-color: #e2e8f0;
+    border-radius: 3px;
+}
+
+.text-line.short {
+    width: 60%;
+}
+
+.text-line.medium {
+    width: 80%;
+}

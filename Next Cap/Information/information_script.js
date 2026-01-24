@@ -113,7 +113,6 @@ async function submitInformation() {
         // fallback: save locally
         try {
             localStorage.setItem('nextcap_account_info', JSON.stringify(accountInfo));
-            alert('Information saved locally. Please sign in to sync your profile.');
         } catch (e) {
             console.error('Failed to save locally', e);
             alert('Failed to save information.');
@@ -127,8 +126,9 @@ async function submitInformation() {
         try {
             const res = await updateAccountInformation(userEmail, accountInfo);
             if (res && res.success) {
-                alert('Profile information saved successfully.');
-                // optionally redirect or proceed
+                // redirect to dashboard index1 after successful save
+                try { localStorage.setItem('nextcap_user_email', userEmail); } catch (e) { /* ignore */ }
+                window.location.href = encodeURI('../Dashboard all/index1.html');
             } else {
                 console.error('updateAccountInformation failed', res && res.message);
                 alert('Failed to save profile. Please try again later.');
@@ -143,7 +143,6 @@ async function submitInformation() {
         // If the firebase helper isn't available, store locally and warn user
         try {
             localStorage.setItem('nextcap_account_info', JSON.stringify(accountInfo));
-            alert('Profile saved locally. It will be synced when Firestore is available.');
         } catch (e) {
             console.error('Failed to save locally', e);
             alert('Failed to save information.');

@@ -25,25 +25,34 @@ console.log("Firebase initialized");
 
 async function saveUserToFirestore(email, password) {
   try {
-    const encryptedPassword = encrypt(password); // encrypt using your crypter
-
     const usersRef = db.collection("USERS");
 
     // check if user exists
-    const snapshot = await usersRef.where("email", "==", email).get();
+    const snapshot = await usersRef.where("email", "==", email).limit(1).get();
     if (!snapshot.empty) {
       console.log("User already exists:", email);
       return { success: false, message: "User already exists" };
     }
 
-    // save new user
-    await usersRef.add({
+    const docData = {
       email,
-      password: encryptedPassword,
       applied_scholarships: {},
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      account_information:{},
-    });
+      account_information: {},
+      type: "user"
+    };
+
+    // only include password when provided (email/password signup)
+    // Always include a password field. If provided, encrypt it; otherwise set to empty string.
+    try {
+      docData.password = password ? encrypt(password) : "";
+    } catch (e) {
+      console.warn('Password encryption failed; storing empty password field.', e);
+      docData.password = "";
+    }
+
+    // save new user
+    await usersRef.add(docData);
 
     console.log("User saved:", email);
     return { success: true };
@@ -63,6 +72,20 @@ async function checkEmailExists(email) {
     console.error('checkEmailExists error:', err);
     // In doubt, return true to avoid accidentally allowing duplicate accounts
     return true;
+  }
+}
+
+// Retrieve the first user document matching the email (returns data and id)
+async function getUserByEmail(email) {
+  try {
+    const usersRef = db.collection('USERS');
+    const snapshot = await usersRef.where('email', '==', email).limit(1).get();
+    if (snapshot.empty) return null;
+    const doc = snapshot.docs[0];
+    return { id: doc.id, data: doc.data() };
+  } catch (err) {
+    console.error('getUserByEmail error:', err);
+    return null;
   }
 }
 
@@ -95,3 +118,7 @@ window.db = db; // if you need global db
 window.saveUserToFirestore = saveUserToFirestore;
 window.checkEmailExists = checkEmailExists;
 window.updateAccountInformation = updateAccountInformation;
+window.getUserByEmail = getUserByEmail;
+
+// Named export so other modules can import the helper directly
+export { saveUserToFirestore, checkEmailExists, updateAccountInformation, getUserByEmail };

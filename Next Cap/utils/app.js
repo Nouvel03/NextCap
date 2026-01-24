@@ -2,6 +2,11 @@
 // Entry point: nextcap_login.html
 
 console.log('app.js loaded successfully!');
+if(localStorage.getItem('nextcap_user_email')){
+
+}
+// Import Firestore helper to save users (Gmail sign-ins)
+import { saveUserToFirestore, getUserByEmail } from '../FirebaseUtils/FirebaseUtils_Login.js';
 
 // ============================================
 // GOOGLE OAUTH SETUP INSTRUCTIONS:
@@ -58,7 +63,7 @@ function loginWithGoogle() {
 }
 
 // Handle Google Sign-In response
-function handleGoogleSignIn(response) {
+async function handleGoogleSignIn(response) {
     console.log('Google Sign-In successful:', response);
     
     // Decode the credential (JWT token) to get email
@@ -70,14 +75,33 @@ function handleGoogleSignIn(response) {
         const email = payload.email;
         
         console.log('User email:', email);
-        alert(`Successfully signed in with ${email}!`);
-        
-        // TODO: Store email/session
-        // TODO: Redirect to dashboard or next page
-        // window.location.href = 'dashboard.html';
+        // Save or ensure user exists in Firestore, then decide redirect based on account information
+        try {
+            const res = await saveUserToFirestore(email);
+            if (res.success) console.log('Gmail user created in Firestore:', email);
+            else console.log('Gmail user save skipped:', res.message || '(exists)');
+
+            // fetch user doc and inspect account_information
+            const userDoc = await getUserByEmail(email);
+            try { localStorage.setItem('nextcap_user_email', email); } catch (e) { /* ignore */ }
+
+            const accountInfo = userDoc && userDoc.data && userDoc.data.account_information;
+            const hasAccountInfo = accountInfo && typeof accountInfo === 'object' && Object.keys(accountInfo).length > 0;
+
+            if (!hasAccountInfo) {
+                window.location.href = encodeURI('../Information/information.html');
+            } else {
+                window.location.href = encodeURI('../Dashboard all/index1.html');
+            }
+        } catch (e) {
+            console.error('Error saving or fetching Gmail user:', e);
+            // fallback: redirect to dashboard
+            try { localStorage.setItem('nextcap_user_email', email); } catch (err) {}
+            window.location.href = encodeURI('../Dashboard all/index1.html');
+        }
     } catch (error) {
         console.error('Error decoding credential:', error);
-        alert('Successfully signed in with Google!');
+        localStorage.setItem('nextcap_user_email', email);
     }
 }
 
@@ -92,14 +116,31 @@ function handleGoogleTokenResponse(tokenResponse) {
         }
     })
     .then(response => response.json())
-    .then(data => {
+    .then(async data => {
         const email = data.email;
         console.log('User email:', email);
         alert(`Successfully signed in as ${email}!`);
-        
-        // TODO: Store email/session
-        // TODO: Redirect to dashboard or next page
-        // window.location.href = 'dashboard.html';
+
+        // Save gmail user without password then redirect depending on account info
+        try {
+            const res = await saveUserToFirestore(email);
+            if (res.success) console.log('Gmail user created in Firestore:', email);
+            else console.log('Gmail user save skipped:', res.message || '(exists)');
+
+            const userDoc = await getUserByEmail(email);
+            try { localStorage.setItem('nextcap_user_email', email); } catch (e) { /* ignore */ }
+            const accountInfo = userDoc && userDoc.data && userDoc.data.account_information;
+            const hasAccountInfo = accountInfo && typeof accountInfo === 'object' && Object.keys(accountInfo).length > 0;
+            if (!hasAccountInfo) {
+                window.location.href = encodeURI('../Information/information.html');
+            } else {
+                window.location.href = encodeURI('../Dashboard all/index1.html');
+            }
+        } catch (e) {
+            console.error('Error saving or fetching Gmail user:', e);
+            try { localStorage.setItem('nextcap_user_email', email); } catch (err) {}
+            window.location.href = encodeURI('../Dashboard all/index1.html');
+        }
     })
     .catch(error => {
         console.error('Error fetching user email:', error);
