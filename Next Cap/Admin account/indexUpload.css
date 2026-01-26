@@ -1,0 +1,363 @@
+/* indexUpload.css - moved from indexUpload.html <style>
+   Contains styles for admin "Create Scholarships" page */
+
+/* BASE STYLES FROM index2.html */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f8f8;
+}
+
+/* HEADER FROM index2.html */
+.header {
+    background-color: white;
+    padding: 12px 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    width: 45px;
+    height: 45px;
+}
+
+.search-bar {
+    flex: 1;
+    max-width: 800px;
+    /* Wider for Admin */
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 25px;
+    font-size: 14px;
+    background-color: #f7fafc;
+}
+
+.user-profile {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #cbd5e0;
+    border-radius: 50%;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #2d3748;
+}
+
+/* CONTAINER LAYOUT FROM index2.html */
+.container {
+    display: flex;
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 20px;
+    gap: 20px;
+}
+
+/* SIDEBAR FROM index2.html */
+.sidebar {
+    width: 250px;
+    /* Slightly wider for admin text */
+    background-color: white;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+}
+
+.sidebar-header {
+    padding: 20px 20px 15px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #718096;
+    text-transform: uppercase;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.menu-item:hover {
+    background-color: #f7fafc;
+}
+
+.menu-item.nested {
+    padding-left: 35px;
+    position: relative;
+}
+
+.menu-item.nested::before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 50%;
+    width: 2px;
+    background-color: #1e40af;
+}
+
+.menu-item.nested::after {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    width: 10px;
+    height: 2px;
+    background-color: #1e40af;
+}
+
+.menu-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.menu-item.active .menu-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* MAIN CONTENT AREA */
+.main-content {
+    flex: 1;
+}
+
+/* FORM CARD DESIGN FROM Screenshot (246) */
+.form-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.form-avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #cbd5e0;
+    border-radius: 50%;
+}
+
+.form-info h4 {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.verified-badge {
+    width: 18px;
+    height: 18px;
+    background-color: #1e40af;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.verified-badge::after {
+    content: "✓";
+    color: white;
+    font-size: 10px;
+}
+
+/* UPLOAD AREA */
+.upload-area {
+    width: 100%;
+    height: 350px;
+    background-color: #d1d5db;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    color: #4b5563;
+    font-size: 48px;
+    font-weight: 500;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.upload-area img.upload-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+}
+
+/* Make the actual file input fill the area but remain invisible */
+.upload-area input.upload-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 3;
+}
+
+/* FORM INPUTS */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    font-size: 14px;
+}
+
+textarea.form-input {
+    height: 120px;
+    resize: none;
+}
+
+/* FLEX GRID FOR SMALLER INPUTS */
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row>div {
+    flex: 1;
+}
+
+/* TAGS CONTAINER */
+.tags-input-container {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9fafb;
+    min-height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: flex-start;
+}
+
+.tag-pill {
+    background-color: #0d9488;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px;
+    cursor: default;
+}
+
+.tag-pill.close::after {
+    content: "✕";
+    font-size: 10px;
+    cursor: pointer;
+}
+
+/* ACTION BUTTONS */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 10px 35px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-size: 14px;
+}
+
+.btn-cancel {
+    background-color: #ef4444;
+    color: white;
+}
+
+.btn-draft {
+    background-color: #0d9488;
+    color: white;
+}
+
+.btn-post {
+    background-color: #fbbf24;
+    color: #451a03;
+}
+
+/* Requirement Item - Full width style */
+.req-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    /* margin-bottom handled by gap in container, but just in case */
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.req-item .remove-req {
+    cursor: pointer;
+    color: #9ca3af;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+.req-item .remove-req:hover {
+    color: #ef4444;
+}

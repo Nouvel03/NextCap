@@ -85,6 +85,12 @@ async function handleGoogleSignIn(response) {
             const userDoc = await getUserByEmail(email);
             try { localStorage.setItem('nextcap_user_email', email); } catch (e) { /* ignore */ }
 
+            const userType = userDoc && userDoc.data && userDoc.data.type;
+            if (userType === 'admin') {
+                window.location.href = encodeURI('../Admin account/indexAdmin.html');
+                return;
+            }
+
             const accountInfo = userDoc && userDoc.data && userDoc.data.account_information;
             const hasAccountInfo = accountInfo && typeof accountInfo === 'object' && Object.keys(accountInfo).length > 0;
 
@@ -129,6 +135,11 @@ function handleGoogleTokenResponse(tokenResponse) {
 
             const userDoc = await getUserByEmail(email);
             try { localStorage.setItem('nextcap_user_email', email); } catch (e) { /* ignore */ }
+            const userType = userDoc && userDoc.data && userDoc.data.type;
+            if (userType === 'admin') {
+                window.location.href = encodeURI('../Admin account/indexAdmin.html');
+                return;
+            }
             const accountInfo = userDoc && userDoc.data && userDoc.data.account_information;
             const hasAccountInfo = accountInfo && typeof accountInfo === 'object' && Object.keys(accountInfo).length > 0;
             if (!hasAccountInfo) {

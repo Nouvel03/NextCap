@@ -15,7 +15,7 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .settings-icon {
@@ -66,7 +66,7 @@ body {
     background-color: white;
     border-radius: 8px;
     padding: 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     height: fit-content;
 }
 
@@ -120,7 +120,7 @@ body {
     background-color: white;
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
@@ -349,7 +349,7 @@ body {
     height: 280px;
     background: linear-gradient(to right, #cbd5e0 0%, #e2e8f0 50%, #cbd5e0 100%);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .text-lines {
@@ -365,6 +365,52 @@ body {
     border-radius: 3px;
 }
 
-.text-line.short {
-    width: 60%;
+
+/* Detail View Styles (Matching Verified Scholarships UI) */
+.post-card.detail-view {
+    padding: 30px;
+}
+
+.post-card.detail-view .detail-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    margin-top: -10px;
+}
+
+.post-card.detail-view .post-body {
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post-card.detail-view .detail-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 21/9;
+    /* Wide banner style */
+    background-color: #cbd5e0;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+}
+
+.post-card.detail-view .detail-stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.post-card.detail-view .saved-info {
+    width: fit-content;
+    margin-bottom: 0;
+}
+
+.post-card.detail-view .description {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #2d3748;
+    margin-bottom: 25px;
+    margin-top: 10px;
 }

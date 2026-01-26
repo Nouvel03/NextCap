@@ -4,225 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Applications Overview</title>
-    <style>
-        /* BASE STYLES & HEADER FROM index2.html */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8f8f8;
-            overflow-x: hidden;
-        }
-
-        .header {
-            background-color: white;
-            padding: 12px 30px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            height: 70px;
-        }
-
-        .logo {
-            width: 45px;
-            height: 45px;
-        }
-
-        .search-bar {
-            flex: 1;
-            max-width: 800px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 10px 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: 25px;
-            font-size: 14px;
-            background-color: #f7fafc;
-            outline: none;
-        }
-
-        .user-profile {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background-color: #cbd5e0;
-            border-radius: 50%;
-        }
-
-        .user-name {
-            font-weight: 600;
-            font-size: 15px;
-            color: #2d3748;
-        }
-
-        /* CONTAINER LAYOUT */
-        .container {
-            display: flex;
-            max-width: 100%;
-            margin: 20px 30px;
-            gap: 20px;
-        }
-
-        /* SIDEBAR FROM index2.html / Screenshot (247) */
-        .sidebar {
-            width: 240px;
-            background-color: white;
-            border-radius: 8px;
-            padding: 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            height: calc(100vh - 120px);
-        }
-
-        .sidebar-header {
-            padding: 20px 20px 15px 25px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #718096;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 25px;
-            color: #4a5568;
-            text-decoration: none;
-            font-size: 14px;
-            cursor: pointer;
-            border-left: 4px solid transparent;
-        }
-
-        .menu-item:hover {
-            background-color: #f7fafc;
-        }
-
-        .menu-item.active {
-            background-color: #1e40af;
-            color: white;
-            border-left-color: #1e40af;
-        }
-
-        .menu-icon {
-            width: 20px;
-            height: 20px;
-        }
-
-        .menu-item.active .menu-icon {
-            filter: brightness(0) invert(1);
-        }
-
-        /* MAIN CONTENT - TABLE DESIGN FROM Screenshot (247) */
-        .main-content {
-            flex: 1;
-            background-color: white;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .table-wrapper {
-            overflow: auto;
-            flex: 1;
-            max-height: 70vh;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        /* Grid Header (A, B, C, D) */
-        .grid-header th {
-            background-color: #d1d5db;
-            border: 1px solid #9ca3af;
-            height: 25px;
-            font-weight: normal;
-            color: #1f2937;
-        }
-
-        .grid-header th.row-index {
-            background-color: #4b5563;
-            width: 40px;
-        }
-
-        /* Content Header */
-        .content-header th {
-            border: 1px solid #e5e7eb;
-            padding: 10px;
-            text-align: left;
-            font-weight: normal;
-            color: #374151;
-        }
-
-        /* Table Cells */
-        td {
-            border: 1px solid #e5e7eb;
-            height: 35px;
-            padding: 0 10px;
-        }
-
-        .row-num {
-            background-color: #f3f4f6;
-            text-align: center;
-            width: 40px;
-            color: #4b5563;
-            border: 1px solid #d1d5db;
-        }
-
-        /* Status Colors as per Screenshot */
-        .status-legend {
-            font-weight: 600;
-        }
-        .status-submitted { color: #fbbf24; } /* Yellow */
-        .status-review { color: #3b82f6; }    /* Blue */
-        .status-approved { color: #10b981; }  /* Green */
-        .status-rejected { color: #ef4444; }  /* Red */
-
-        /* Selected Cell Simulation */
-        .selected-cell {
-            border: 2px solid #059669 !important;
-        }
-
-        /* BOTTOM ACTION BUTTONS */
-        .action-footer {
-            padding: 20px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            background-color: white;
-            border-top: 1px solid #f3f4f6;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            border: none;
-            color: white;
-        }
-
-        .btn-view { background-color: #1e40af; }
-        .btn-status { background-color: #0d9488; }
-        .btn-message { background-color: #fbbf24; color: #451a03; }
-
-    </style>
+    <link rel="stylesheet" href="./indexExcel.css">
 </head>
 <body>
 
@@ -240,23 +22,23 @@
     <div class="container">
         <div class="sidebar">
             <div class="sidebar-header">Admin Menu</div>
-            <a href="#" class="menu-item">
+            <a href="indexAdmin.html" class="menu-item">
                 <img src="images/not-active.svg" alt="" class="menu-icon">
                 Dashboard
             </a>
-            <a href="#" class="menu-item">
+            <a href="indexAdmin.html" class="menu-item">
                 <img src="images/not-active.svg" alt="" class="menu-icon">
                 Manage Scholarships
             </a>
-            <a href="#" class="menu-item active">
-                <img src="images/active.svg" alt="" class="menu-icon">
+            <a href="indexUpload.html" class="menu-item">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Create Scholarships
+            </a>
+            <a href="indexExcel.html" class="menu-item">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
                 Applications Overview
             </a>
-            <a href="#" class="menu-item">
-                <img src="images/not-active.svg" alt="" class="menu-icon">
-                Document & Requirement Tracking
-            </a>
-            <a href="#" class="menu-item">
+            <a href="indexAdmin.html" class="menu-item">
                 <img src="images/not-active.svg" alt="" class="menu-icon">
                 Profile Settings
             </a>
@@ -292,12 +74,7 @@
                             </span>
                         </td>
                         <td></td>
-                    </tr>
-                    <script>
-                        for(let i=3; i<=24; i++) {
-                            document.write(`<tr><td class="row-num">${i}</td><td></td><td></td><td></td><td></td></tr>`);
-                        }
-                    </script>
+                    </tr> 
                 </table>
             </div>
 
@@ -309,4 +86,5 @@
         </div>
     </div>
 </body>
-</html>
+<script type="module" src="./indexExcel.js"></script>
+</html> 

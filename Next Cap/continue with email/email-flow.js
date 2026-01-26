@@ -267,6 +267,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.warn('Could not persist user email to localStorage', e);
                 }
 
+                // If the page includes a user type selector with id 'user-type', save it to Firestore
+                try {
+                    const typeEl = document.getElementById('user-type');
+                    if (typeEl && typeof setUserType === 'function') {
+                        const userType = (typeEl.value || 'user').trim();
+                        await setUserType(userEmail, userType);
+                    }
+                } catch (e) {
+                    console.warn('Failed to save user type:', e);
+                }
+
                 window.location.href = '../Information/information.html';
             } else {
                 passwordError.textContent = message || 'Failed to create account. Please try again.';

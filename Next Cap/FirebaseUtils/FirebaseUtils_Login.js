@@ -110,6 +110,36 @@ async function updateAccountInformation(email, accountInfo) {
   }
 }
 
+// Set or update the `type` field for a user identified by email.
+// If the user doesn't exist, create a minimal user document with the given type.
+async function setUserType(email, type) {
+  try {
+    const usersRef = db.collection('USERS');
+    const snapshot = await usersRef.where('email', '==', email).limit(1).get();
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      await doc.ref.update({ type });
+      console.log('User type updated for', email, type);
+      return { success: true };
+    } else {
+      const docData = {
+        email,
+        type,
+        applied_scholarships: {},
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        account_information: {},
+        password: ""
+      };
+      await usersRef.add(docData);
+      console.log('User created with type for', email, type);
+      return { success: true, created: true };
+    }
+  } catch (err) {
+    console.error('setUserType error:', err);
+    return { success: false, message: err.message };
+  }
+}
+
 // ================================
 // EXPORT / GLOBAL
 // ================================
@@ -119,6 +149,7 @@ window.saveUserToFirestore = saveUserToFirestore;
 window.checkEmailExists = checkEmailExists;
 window.updateAccountInformation = updateAccountInformation;
 window.getUserByEmail = getUserByEmail;
+window.setUserType = setUserType;
 
 // Named export so other modules can import the helper directly
-export { saveUserToFirestore, checkEmailExists, updateAccountInformation, getUserByEmail };
+export { saveUserToFirestore, checkEmailExists, updateAccountInformation, getUserByEmail, setUserType };

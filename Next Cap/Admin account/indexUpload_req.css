@@ -1,0 +1,38 @@
+
+/* Requirement Item - Full width style */
+.req-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    margin-bottom: 8px; /* space between items */
+    font-size: 14px;
+    color: #4b5563;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.req-item:last-child {
+    margin-bottom: 0;
+}
+
+.req-item .remove-req {
+    cursor: pointer;
+    color: #9ca3af;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 10px;
+    transition: color 0.2s;
+}
+
+.req-item .remove-req:hover {
+    color: #ef4444;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -67,12 +67,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (decrypted === password) {
+        // If this account is an admin, redirect to admin area
+        const userType = data && data.type;
+        try { localStorage.setItem('nextcap_user_email', email); } catch (e) { /* ignore */ }
+        if (userType === 'admin') {
+          window.location.href = '../Admin account/indexAdmin.html';
+          return;
+        }
+
         // Check if account_information is present and non-empty
         const accountInfo = data.account_information;
         const hasAccountInfo = accountInfo && typeof accountInfo === 'object' && Object.keys(accountInfo).length > 0;
-
-        // persist logged-in email for other pages
-        try { localStorage.setItem('nextcap_user_email', email); } catch (e) { /* ignore */ }
 
         if (!hasAccountInfo) {
           // redirect user to complete profile

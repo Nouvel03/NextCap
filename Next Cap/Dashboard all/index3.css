@@ -15,7 +15,7 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
@@ -58,7 +58,7 @@ body {
     background-color: white;
     border-radius: 8px;
     padding: 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     height: fit-content;
 }
 
@@ -116,7 +116,7 @@ body {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .stat-header {
@@ -170,7 +170,7 @@ body {
     background-color: white;
     padding: 16px 20px;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     color: #4a5568;
     font-size: 14px;
 }
@@ -181,19 +181,23 @@ body {
     gap: 20px;
 }
 
+/* Modified Application Section for Dashboard List View */
 .application-section {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background-color: transparent;
+    /* No background container */
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 .application-section h3 {
-    font-size: 16px;
+    font-size: 18px;
+    /* Match Headers */
     margin-bottom: 20px;
     color: #2d3748;
     font-weight: 600;
 }
+
 
 .application-details .label {
     margin-bottom: 10px;
