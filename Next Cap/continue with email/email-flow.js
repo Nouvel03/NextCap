@@ -52,8 +52,8 @@ async function sendOTPToEmail(email) {
         };
 
         const result = await emailjs.send(
-            'service_tvuh312',   // your service ID
-            'template_j6oq6km',  // your template ID
+            window.SECRETS.EMAILJS_SERVICE_ID,
+            window.SECRETS.EMAILJS_OTP_TEMPLATE_ID,
             templateParams
         );
 
@@ -70,7 +70,7 @@ async function verifyOTPCode(email, otpCode) {
     return otpCode === lastOTP;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize EmailJS
 
     // Email card elements
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ================================
     // EMAIL CARD HANDLER
     // ================================
-    emailContinueBtn.addEventListener('click', async function() {
+    emailContinueBtn.addEventListener('click', async function () {
         const email = emailInput.value.trim();
 
         emailError.textContent = '';
@@ -148,14 +148,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    emailInput.addEventListener('keypress', function(e) {
+    emailInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') emailContinueBtn.click();
     });
 
     // ================================
     // OTP CARD HANDLER
     // ================================
-    otpContinueBtn.addEventListener('click', async function() {
+    otpContinueBtn.addEventListener('click', async function () {
         const otpCode = otpInput.value.trim();
 
         otpError.textContent = '';
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    resendLink.addEventListener('click', async function(e) {
+    resendLink.addEventListener('click', async function (e) {
         e.preventDefault();
 
         try {
@@ -214,21 +214,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    otpInput.addEventListener('keypress', function(e) {
+    otpInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') otpContinueBtn.click();
     });
 
-    passwordContinueBtn.addEventListener('click', async function() {
+    passwordContinueBtn.addEventListener('click', async function () {
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
-    
+
         passwordError.textContent = '';
         confirmPasswordError.textContent = '';
         passwordInput.style.borderColor = '#ddd';
         confirmPasswordInput.style.borderColor = '#ddd';
-    
+
         let hasError = false;
-    
+
         if (!password) {
             passwordError.textContent = 'Please enter a password';
             passwordInput.style.borderColor = '#e74c3c';
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordInput.style.borderColor = '#e74c3c';
             hasError = true;
         }
-    
+
         if (!confirmPassword) {
             confirmPasswordError.textContent = 'Please confirm your password';
             confirmPasswordInput.style.borderColor = '#e74c3c';
@@ -248,16 +248,16 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmPasswordInput.style.borderColor = '#e74c3c';
             hasError = true;
         }
-    
+
         if (hasError) return;
-    
+
         passwordContinueBtn.disabled = true;
         passwordContinueBtn.textContent = 'Creating Account...';
-    
+
         try {
             // Save user info in Firestore USERS collection (no Auth)
             const { success, message } = await saveUserToFirestore(userEmail, password);
-        
+
             if (success) {
 
                 // persist the signed-up user's email so the Information page can identify the account
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ================================
     // BACK BUTTONS
     // ================================
-    document.getElementById('otp-back-btn').addEventListener('click', function() {
+    document.getElementById('otp-back-btn').addEventListener('click', function () {
         showCard('email', 'left');
         otpInput.value = '';
         otpError.textContent = '';
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const emailBackBtn = document.getElementById('email-back-btn');
     if (emailBackBtn) {
-        emailBackBtn.addEventListener('click', function() {
+        emailBackBtn.addEventListener('click', function () {
             // go back to previous page (login page)
             if (window.history.length > 1) {
                 window.history.back();
@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    document.getElementById('password-back-btn').addEventListener('click', function() {
+    document.getElementById('password-back-btn').addEventListener('click', function () {
         showCard('otp', 'left');
         passwordInput.value = '';
         confirmPasswordInput.value = '';
@@ -320,11 +320,11 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmPasswordError.textContent = '';
     });
 
-    passwordInput.addEventListener('keypress', function(e) {
+    passwordInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') confirmPasswordInput.focus();
     });
 
-    confirmPasswordInput.addEventListener('keypress', function(e) {
+    confirmPasswordInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') passwordContinueBtn.click();
     });
 });

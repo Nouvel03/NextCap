@@ -2,7 +2,7 @@
 // Entry point: nextcap_login.html
 
 console.log('app.js loaded successfully!');
-if(localStorage.getItem('nextcap_user_email')){
+if (localStorage.getItem('nextcap_user_email')) {
 
 }
 // Import Firestore helper to save users (Gmail sign-ins)
@@ -24,8 +24,8 @@ import { saveUserToFirestore, getUserByEmail } from '../FirebaseUtils/FirebaseUt
 // 8. Replace 'YOUR_GOOGLE_CLIENT_ID' below with your actual Client ID
 // ============================================
 
-// Google OAuth Client ID - REPLACE THIS WITH YOUR CLIENT ID
-const GOOGLE_CLIENT_ID = '375271585016-dchi4bppn0lcu5mhut1lj3mh48tb1p3g.apps.googleusercontent.com';
+// Google OAuth Client ID - Loaded from secrets.js
+const GOOGLE_CLIENT_ID = window.SECRETS ? window.SECRETS.GOOGLE_CLIENT_ID : 'MISSING_SECRETS';
 
 // Google Login Function using Google Identity Services
 function loginWithGoogle() {
@@ -65,15 +65,15 @@ function loginWithGoogle() {
 // Handle Google Sign-In response
 async function handleGoogleSignIn(response) {
     console.log('Google Sign-In successful:', response);
-    
+
     // Decode the credential (JWT token) to get email
     const credential = response.credential;
-    
+
     // Decode JWT to extract email (JWT has 3 parts: header.payload.signature)
     try {
         const payload = JSON.parse(atob(credential.split('.')[1]));
         const email = payload.email;
-        
+
         console.log('User email:', email);
         // Save or ensure user exists in Firestore, then decide redirect based on account information
         try {
@@ -102,7 +102,7 @@ async function handleGoogleSignIn(response) {
         } catch (e) {
             console.error('Error saving or fetching Gmail user:', e);
             // fallback: redirect to dashboard
-            try { localStorage.setItem('nextcap_user_email', email); } catch (err) {}
+            try { localStorage.setItem('nextcap_user_email', email); } catch (err) { }
             window.location.href = encodeURI('../Dashboard all/index1.html');
         }
     } catch (error) {
@@ -114,49 +114,49 @@ async function handleGoogleSignIn(response) {
 // Handle OAuth token response (alternative flow)
 function handleGoogleTokenResponse(tokenResponse) {
     console.log('Google OAuth token received:', tokenResponse);
-    
+
     // Fetch only email from userinfo endpoint
     fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
         headers: {
             'Authorization': `Bearer ${tokenResponse.access_token}`
         }
     })
-    .then(response => response.json())
-    .then(async data => {
-        const email = data.email;
-        console.log('User email:', email);
-        alert(`Successfully signed in as ${email}!`);
+        .then(response => response.json())
+        .then(async data => {
+            const email = data.email;
+            console.log('User email:', email);
+            alert(`Successfully signed in as ${email}!`);
 
-        // Save gmail user without password then redirect depending on account info
-        try {
-            const res = await saveUserToFirestore(email);
-            if (res.success) console.log('Gmail user created in Firestore:', email);
-            else console.log('Gmail user save skipped:', res.message || '(exists)');
+            // Save gmail user without password then redirect depending on account info
+            try {
+                const res = await saveUserToFirestore(email);
+                if (res.success) console.log('Gmail user created in Firestore:', email);
+                else console.log('Gmail user save skipped:', res.message || '(exists)');
 
-            const userDoc = await getUserByEmail(email);
-            try { localStorage.setItem('nextcap_user_email', email); } catch (e) { /* ignore */ }
-            const userType = userDoc && userDoc.data && userDoc.data.type;
-            if (userType === 'admin') {
-                window.location.href = encodeURI('../Admin account/indexAdmin.html');
-                return;
-            }
-            const accountInfo = userDoc && userDoc.data && userDoc.data.account_information;
-            const hasAccountInfo = accountInfo && typeof accountInfo === 'object' && Object.keys(accountInfo).length > 0;
-            if (!hasAccountInfo) {
-                window.location.href = encodeURI('../Information/information.html');
-            } else {
+                const userDoc = await getUserByEmail(email);
+                try { localStorage.setItem('nextcap_user_email', email); } catch (e) { /* ignore */ }
+                const userType = userDoc && userDoc.data && userDoc.data.type;
+                if (userType === 'admin') {
+                    window.location.href = encodeURI('../Admin account/indexAdmin.html');
+                    return;
+                }
+                const accountInfo = userDoc && userDoc.data && userDoc.data.account_information;
+                const hasAccountInfo = accountInfo && typeof accountInfo === 'object' && Object.keys(accountInfo).length > 0;
+                if (!hasAccountInfo) {
+                    window.location.href = encodeURI('../Information/information.html');
+                } else {
+                    window.location.href = encodeURI('../Dashboard all/index1.html');
+                }
+            } catch (e) {
+                console.error('Error saving or fetching Gmail user:', e);
+                try { localStorage.setItem('nextcap_user_email', email); } catch (err) { }
                 window.location.href = encodeURI('../Dashboard all/index1.html');
             }
-        } catch (e) {
-            console.error('Error saving or fetching Gmail user:', e);
-            try { localStorage.setItem('nextcap_user_email', email); } catch (err) {}
-            window.location.href = encodeURI('../Dashboard all/index1.html');
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching user email:', error);
-        alert('Failed to sign in with Google. Please try again.');
-    });
+        })
+        .catch(error => {
+            console.error('Error fetching user email:', error);
+            alert('Failed to sign in with Google. Please try again.');
+        });
 }
 
 // Navigation functions
@@ -177,13 +177,13 @@ function navigateBack() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const googleBtn = document.querySelector('.google-btn');
     if (googleBtn && !googleBtn.hasAttribute('data-wired')) {
         googleBtn.addEventListener('click', loginWithGoogle);
         googleBtn.setAttribute('data-wired', 'true');
     }
-    
+
     // Wire specific buttons by id to avoid ambiguous selectors when multiple email buttons exist
     const signupBtn = document.getElementById('email-signup-btn');
     if (signupBtn && !signupBtn.hasAttribute('data-wired')) {
@@ -196,9 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
         emailLoginBtn.addEventListener('click', navigateToLoginWithEmail);
         emailLoginBtn.setAttribute('data-wired', 'true');
     }
-    
+
     // Register button removed; no wiring necessary
-    
+
     const backBtn = document.querySelector('.back-button');
     if (backBtn && !backBtn.hasAttribute('data-wired')) {
         backBtn.addEventListener('click', navigateBack);

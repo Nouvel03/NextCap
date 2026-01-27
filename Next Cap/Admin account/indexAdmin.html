@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Manage Scholarships</title>
     <link rel="stylesheet" href="./indexAdmin.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- Secrets Config -->
+    <script src="../utils/secrets.js"></script>
 </head>
+
 <body>
 
     <div class="header">
@@ -22,14 +29,11 @@
     <div class="container">
         <div class="sidebar">
             <div class="sidebar-header">Admin Menu</div>
-            
-            <a href="indexAdmin.html" class="menu-item">
-                <img src="images/not-active.svg" alt="" class="menu-icon">
-                Dashboard
-            </a>
 
-            <a href="indexAdmin.html" class="menu-item">
-                <img src="images/not-active.svg" alt="" class="menu-icon">
+            <!-- Dashboard removed as requested -->
+
+            <a href="indexAdmin.html" class="menu-item active">
+                <img src="images/active.svg" alt="" class="menu-icon">
                 Manage Scholarships
             </a>
 
@@ -44,10 +48,7 @@
                 Applications Overview
             </a>
 
-            <a href="indexAdmin.html" class="menu-item">
-                <img src="images/not-active.svg" alt="" class="menu-icon">
-                Profile Settings
-            </a>
+            <!-- Profile Settings removed -->
         </div>
 
         <div class="main-content">
@@ -80,7 +81,8 @@
                     <div class="preview-img"></div>
                     <div class="details">
                         <h2>DOST are now looking for scholars</h2>
-                        <p>The Department of Science and Technology (DOST) is now accepting applications from qualified students pursuing science and technology-related programs.</p>
+                        <p>The Department of Science and Technology (DOST) is now accepting applications from qualified
+                            students pursuing science and technology-related programs.</p>
                         <p style="font-weight: 700; margin-bottom: 5px;">Tags</p>
                         <div class="tag-group">
                             <span class="tag teal">SHS</span>
@@ -89,10 +91,10 @@
                         </div>
                     </div>
                     <div class="stats-panel">
-                        <div class="stat-line"><span class="stat-label">Application Deadline</span><span class="stat-val deadline">February 1 2026</span></div>
-                        <div class="stat-line"><span class="stat-label">Number of Applications</span><span class="stat-val">1000</span></div>
-                        <div class="stat-line"><span class="stat-label">Number of saves</span><span class="stat-val">1000</span></div>
-                        <div class="stat-line"><span class="stat-label">Number of slots</span><span class="stat-val">1000</span></div>
+                        <div class="stat-line"><span class="stat-label">Application Deadline</span><span
+                                class="stat-val deadline">February 1 2026</span></div>
+                        <div class="stat-line"><span class="stat-label">Number of saves</span><span
+                                class="stat-val">1000</span></div>
                     </div>
                 </div>
 
@@ -106,4 +108,5 @@
     </div>
 </body>
 <script type="module" src="./indexAdmin.js"></script>
+
 </html>

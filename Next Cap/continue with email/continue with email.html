@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextCap - Create account</title>
     <link rel="stylesheet" href="styles.css">
-    <script type="text/javascript"
-    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-</script>
-<script type="text/javascript">
-(function(){
-  emailjs.init({
-    publicKey: "__FIfnIZD_eDM4iR5",
-  });
-})();
-</script>
-
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- Secrets Config -->
+    <script src="../utils/secrets.js"></script>
+
+    <script type="text/javascript">
+        (function () {
+            if (window.SECRETS) {
+                emailjs.init({
+                    publicKey: window.SECRETS.EMAILJS_PUBLIC_KEY,
+                });
+            } else {
+                console.error("Secrets not loaded for EmailJS init");
+            }
+        })();
+    </script>
 </head>
+
 <body>
     <div class="logo">
         <img src="images/Group 21.svg" alt="Scholarly Logo">
@@ -38,7 +44,7 @@
         </button>
         <h2>Create your account</h2>
         <p class="subtitle">Enter your email to get started</p>
-        
+
         <div class="form-group">
             <label for="email-input">Email</label>
             <input type="email" id="email-input" placeholder="your.email@example.com" autocomplete="email">
@@ -54,14 +60,14 @@
         </button>
         <h2>Verify your email</h2>
         <p class="subtitle">Enter the code we sent to<br><strong id="otp-email-display"></strong></p>
-        
+
         <div class="form-group">
             <label for="otp-input" class="code-label">Code</label>
             <input type="text" id="otp-input" class="code-input" placeholder="Enter 6-digit code" maxlength="6">
             <div class="error-message" id="otp-error"></div>
         </div>
         <button class="continue-btn" id="otp-continue-btn">Continue</button>
-        
+
         <div class="resend-code">
             Didn't get the code? <a href="#" id="resend-link">Resend code</a>
         </div>
@@ -74,32 +80,34 @@
         </button>
         <h2>Create your password</h2>
         <p class="subtitle">Choose a strong password for your account</p>
-        
+
         <div class="form-group">
             <label for="password-input">Password</label>
             <input type="password" id="password-input" placeholder="Enter your password" autocomplete="new-password">
             <div class="error-message" id="password-error"></div>
         </div>
-        
+
         <div class="form-group">
             <label for="confirm-password-input">Confirm Password</label>
-            <input type="password" id="confirm-password-input" placeholder="Confirm your password" autocomplete="new-password">
+            <input type="password" id="confirm-password-input" placeholder="Confirm your password"
+                autocomplete="new-password">
             <div class="error-message" id="confirm-password-error"></div>
         </div>
-        
+
         <button class="continue-btn" id="password-continue-btn">Create Account</button>
     </div>
 
     <div class="bottom-shapes">
-       <img src="images/Group 19.svg">
+        <img src="images/Group 19.svg">
     </div>
     <!-- Load EmailJS SDK first -->
 
 
-<!-- Your scripts that depend on EmailJS -->
-<script type="module" src="../FirebaseUtils/FirebaseUtils_Login.js"></script>
-<script src="../app.js"></script>
-<script src="email-flow.js"></script>
+    <!-- Your scripts that depend on EmailJS -->
+    <script type="module" src="../FirebaseUtils/FirebaseUtils_Login.js"></script>
+    <script src="../app.js"></script>
+    <script src="email-flow.js"></script>
 
 </body>
+
 </html>

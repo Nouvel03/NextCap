@@ -23,6 +23,7 @@ export async function createScholarship(data) {
             created_by: data.created_by || "unknown",
             time_of_creation: firebase.firestore.FieldValue.serverTimestamp(),
             deadline: data.deadline,
+            active: true, // Default to active
             image_id: data.image_id,
             title: data.title,
             from: data.from || "", // School/Grant

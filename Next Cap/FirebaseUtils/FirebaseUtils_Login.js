@@ -8,15 +8,12 @@ import { encrypt, decrypt } from "../utils/crypter.js"; // your crypter file
 // FIREBASE INITIALIZATION
 // ================================
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDVlX0vRgMqDNyzPPeebJxv5AFF-ZBkqbI",
-  authDomain: "nextcap-325c5.firebaseapp.com",
-  projectId: "nextcap-325c5",
-  storageBucket: "nextcap-325c5.firebasestorage.app",
-  messagingSenderId: "40961580759",
-  appId: "1:40961580759:web:29ca52a731ee5f8408da92",
-  measurementId: "G-C3592LXZQC"
-};
+// Ensure secrets are loaded
+if (typeof window.SECRETS === 'undefined') {
+  console.error("SECRETS not loaded! Make sure to include utils/secrets.js in your HTML.");
+}
+
+const firebaseConfig = window.SECRETS.FIREBASE_CONFIG;
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);

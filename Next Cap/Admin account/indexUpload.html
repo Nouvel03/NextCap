@@ -11,6 +11,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <!-- Secrets Config -->
+    <script src="../utils/secrets.js"></script>
     <!-- Appwrite SDK -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     <script type="module" src="./indexUpload.js"></script>
@@ -32,10 +34,7 @@
     <div class="container">
         <div class="sidebar">
             <div class="sidebar-header">Admin Menu</div>
-            <a href="indexAdmin.html" class="menu-item">
-                <img src="images/not-active.svg" alt="" class="menu-icon">
-                Dashboard
-            </a>
+            <!-- Dashboard removed -->
             <a href="indexAdmin.html" class="menu-item">
                 <img src="images/not-active.svg" alt="" class="menu-icon">
                 Manage Scholarships
@@ -48,10 +47,7 @@
                 <img src="images/not-active.svg" alt="" class="menu-icon">
                 Applications Overview
             </a>
-            <a href="indexAdmin.html" class="menu-item">
-                <img src="images/not-active.svg" alt="" class="menu-icon">
-                Profile Settings
-            </a>
+            <!-- Profile Settings removed -->
         </div>
 
         <div class="main-content">
@@ -95,7 +91,7 @@
                 <div class="form-row">
                     <div class="input-group">
                         <label class="input-label">Application Deadline</label>
-                        <input id="deadline-input" type="date" class="form-input">
+                        <input id="deadline-input" type="datetime-local" class="form-input">
                     </div>
                     <div class="input-group">
                         <label class="input-label">Number of slots</label>

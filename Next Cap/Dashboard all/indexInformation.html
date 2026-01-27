@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Information - NextCap</title>
+    <!-- Reuse Dashboard Styles -->
+    <link rel="stylesheet" href="index3.css">
+    <!-- Page Specific Styles -->
+    <link rel="stylesheet" href="indexInformation.css">
+    <style>
+        .tags-container {
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f9fafb;
+            min-height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-content: flex-start;
+        }
+
+        .tag-pill {
+            background-color: #0d9488;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: default;
+        }
+
+        .tag-pill:after {
+            content: "✕";
+            font-size: 10px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .tag-pill:after:hover {
+            opacity: 1;
+        }
+    </style>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <!-- Secrets Config -->
+    <script src="../utils/secrets.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <img src="images/logo.svg" alt="Logo" class="logo">
+        <div class="search-bar">
+            <!-- Search bar is here for layout consistency -->
+        </div>
+        <div class="user-avatar"></div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">Menu</div>
+            <a href="index1.html" class="menu-item">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Home
+            </a>
+            <a href="index3.html" class="menu-item">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Dashboard
+            </a>
+            <a href="indexInformation.html" class="menu-item active">
+                <img src="images/active.svg" alt="" class="menu-icon">
+                Information
+            </a>
+            <a href="#" class="menu-item">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Profile
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="form-card">
+
+                <!-- Personal Information -->
+                <div class="form-section-title">Personal Information</div>
+                <p style="font-size:13px; color:#718096; margin-bottom:20px; margin-top:-10px;">General details about
+                    yourself to personalize your experience.</p>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label">First Name</label>
+                        <input type="text" id="firstName" class="form-input" placeholder="e.g. John">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Middle Name</label>
+                        <input type="text" id="middleName" class="form-input" placeholder="e.g. Doe">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Last Name</label>
+                    <input type="text" id="lastName" class="form-input" placeholder="e.g. Smith">
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label">Birthday</label>
+                        <input type="date" id="birthday" class="form-input">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Gender</label>
+                        <select id="gender" class="form-input">
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Non-binary">Non-binary</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Nationality / Citizenship</label>
+                    <input type="text" id="nationality" class="form-input" placeholder="e.g. Filipino">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Current Address</label>
+                    <input type="text" id="address" class="form-input" placeholder="e.g. 123 Street Name, City">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Contact Number</label>
+                    <input type="tel" id="contact" class="form-input" placeholder="e.g. 09123456789">
+                </div>
+
+                <!-- Education Information -->
+                <div class="form-section-title">Education Information</div>
+                <p style="font-size:13px; color:#718096; margin-bottom:20px; margin-top:-10px;">Your educational
+                    background helps us match you with relevant opportunities.</p>
+                <div class="input-group">
+                    <label class="input-label">Current School / University</label>
+                    <input type="text" id="school" class="form-input" placeholder="e.g. Bulacan State University">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">School Address</label>
+                    <input type="text" id="schoolAddress" class="form-input" placeholder="e.g. Malolos, Bulacan">
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label">Education Level</label>
+                        <select id="educationLevel" class="form-input">
+                            <option value="">Select level</option>
+                            <option value="Senior High">Senior High</option>
+                            <option value="Undergraduate">Undergraduate</option>
+                            <option value="Graduate">Graduate</option>
+                            <option value="Postgraduate">Postgraduate</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Year Level</label>
+                        <input type="number" id="yearLevel" class="form-input" min="1" max="10" placeholder="e.g. 3">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Course / Strand / Program</label>
+                    <input type="text" id="course" class="form-input" placeholder="e.g. BS Computer Science">
+                </div>
+
+                <!-- Academic & Financial -->
+                <div class="form-section-title">Academic & Financial Records</div>
+                <p style="font-size:13px; color:#718096; margin-bottom:20px; margin-top:-10px;">Academic and financial
+                    information for eligibility verification.</p>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label">GWA</label>
+                        <input type="number" id="gwa" class="form-input" step="0.01" placeholder="e.g. 1.75">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Est. Family Salary (Monthly)</label>
+                        <input type="number" id="estimatedSalary" class="form-input" placeholder="e.g. 20000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Financial Status</label>
+                    <select id="financialStatus" class="form-input">
+                        <option value="">Select status</option>
+                        <option value="Low Income">Low Income</option>
+                        <option value="Middle Income">Middle Income</option>
+                        <option value="High Income">High Income</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </div>
+
+                <!-- Interests & Skills -->
+                <div class="form-section-title">Interests & Skills</div>
+                <p style="font-size:13px; color:#718096; margin-bottom:20px; margin-top:-10px;">Add your interests to
+                    help us find better scholarship matches (e.g., coding, painting).</p>
+
+                <div class="input-group">
+                    <label class="input-label">Interests List</label>
+                    <input type="text" id="interests-input" class="form-input"
+                        placeholder="Type an interest and press Enter" style="margin-bottom: 10px;">
+                    <div id="interests-container" class="tags-container">
+                        <!-- JS renders pills here -->
+                    </div>
+                </div>
+
+                <!-- Update Button -->
+                <div class="form-actions">
+                    <button class="btn-update" id="update-btn">Update Information</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic Script -->
+    <script src="indexInformation.js"></script>
+</body>
+
+</html>

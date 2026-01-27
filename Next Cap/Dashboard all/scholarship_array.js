@@ -62,7 +62,6 @@ function createCardHTML(s) {
           <div class="post-left">
             <div class="post-image" style="${imageStyle}"></div>
             <div class="saved-info"><div class="saved-icon"></div><span>Saved by: ${s.current_participants || 0} applicants</span></div>
-            <div class="slots-info">Slots available: ${(s.amount_of_participants || 0) - (s.current_participants || 0)}/${s.amount_of_participants || 'Unltd'}</div>
           </div>
   
           <div class="post-right">
@@ -250,7 +249,19 @@ function getUserKeywordsFromCache() {
   if (currentUserData.account_information) {
     Object.values(currentUserData.account_information).forEach(val => addIfString(val));
   }
+  // Add direct fields
   ['type', 'education', 'status', 'income'].forEach(field => addIfString(currentUserData[field]));
+
+  // Add interests array
+  if (currentUserData.interests && Array.isArray(currentUserData.interests)) {
+    currentUserData.interests.forEach(interest => {
+      // Interests might be multi-word e.g. "Computer Science" -> split them or keep as phrase? 
+      // Splitting usually finds better partial matches with tags.
+      if (typeof interest === 'string') {
+        interest.split(/\s+/).forEach(word => addIfString(word));
+      }
+    });
+  }
 
   return Array.from(keywords);
 }
@@ -421,7 +432,9 @@ async function renderFirestoreScholarships() {
     if (email) {
       await fetchCurrentUserProfile(email);
     }
-    const snapshot = await db.collection('SCHOLARSHIPS').orderBy('time_of_creation', 'desc').get();
+    // Only show active scholarships (client-side filtering to include docs missing 'active' field)
+    const snapshot = await db.collection('SCHOLARSHIPS').get();
+
     container.innerHTML = ''; // Clear loading
 
     if (snapshot.empty) {
@@ -429,7 +442,24 @@ async function renderFirestoreScholarships() {
       return;
     }
 
+    // Sort client-side
+    const docs = [];
     snapshot.forEach(doc => {
+      const d = doc.data();
+      // If active is explicitly false, skip. treating undefined as true.
+      if (d.active === false) return;
+      docs.push(doc);
+    });
+
+    docs.sort((a, b) => {
+      const d1 = a.data().time_of_creation;
+      const d2 = b.data().time_of_creation;
+      const t1 = d1 && d1.toMillis ? d1.toMillis() : 0;
+      const t2 = d2 && d2.toMillis ? d2.toMillis() : 0;
+      return t2 - t1; // Descending
+    });
+
+    docs.forEach(doc => {
       const data = doc.data();
       // Map Firestore data to the expected format for createCardHTML
       // We ensure we handle the fields we saved: title, description, tags, image_id, etc.

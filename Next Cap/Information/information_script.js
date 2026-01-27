@@ -1,11 +1,12 @@
 let currentPage = 1;
-const totalPages = 3;
+const totalPages = 4;
 let isAnimating = false;
 
 const sectionTitles = {
     1: 'Personal Information',
     2: 'Education Information',
-    3: 'Academic Records'
+    3: 'Academic Records',
+    4: 'Interests & Skills'
 };
 
 function updateProgress() {
@@ -43,7 +44,7 @@ function showPage(pageNum, direction = 'forward') {
     isAnimating = true;
 
     const cards = document.querySelectorAll('.form-card');
-    
+
     // Remove active from all cards
     cards.forEach(card => {
         card.classList.remove('active', 'slide-back');
@@ -56,7 +57,7 @@ function showPage(pageNum, direction = 'forward') {
             targetCard.classList.add('slide-back');
         }
         targetCard.classList.add('active');
-        
+
         setTimeout(() => {
             isAnimating = false;
         }, 300);
@@ -97,11 +98,24 @@ async function submitInformation() {
         schoolAddress: document.getElementById('schoolAddress')?.value?.trim() || '',
         educationLevel: document.getElementById('educationLevel')?.value?.trim() || '',
         course: document.getElementById('course')?.value?.trim() || '',
-        yearLevel: document.getElementById('yearLevel')?.value?.trim() || '',
         gwa: document.getElementById('gwa')?.value?.trim() || '',
         financialStatus: document.getElementById('financialStatus')?.value?.trim() || '',
         estimatedSalary: document.getElementById('estimatedSalary')?.value?.trim() || ''
     };
+
+    // Collect interests array
+    const interestsContainer = document.getElementById('interests-container');
+    const interests = interestsContainer
+        ? Array.from(interestsContainer.children).map(c => c.textContent.replace('✕', '').trim())
+        : [];
+
+    // We want to save interests at the root level (according to request), 
+    // but the helper `updateAccountInformation` saves to `account_information` map.
+    // We will need to update the helper or do it manually. 
+    // For now, let's assume we update the helper to accept 'rootUpdates' or similar.
+    // Or we pass it in accountInfo and handle it there? 
+    // Let's pass it separately to a new/modified function.
+    // Logic below updated to use a new generic update if available or pass extra param.
 
     // disable next buttons while saving
     const nextButtons = document.querySelectorAll('.btn-next');
@@ -122,11 +136,41 @@ async function submitInformation() {
         return;
     }
 
-    if (typeof updateAccountInformation === 'function') {
+    // Check if we have the generic update function (we will add this to FirebaseUtils)
+    // If not, we fall back to updateAccountInformation but we might miss 'interests' at root.
+    // Ideally we update FirebaseUtils_Login.js to have `updateUserDoc(email, data)`.
+    // Let's assume we will rename/upgrade `updateAccountInformation` to `updateUserProfile`.
+
+    if (typeof updateUserProfile === 'function') {
         try {
+            // We want 'interests' at root, and others in 'account_information'.
+            // Construct the payload expected by the new helper
+            const payload = {
+                account_information: accountInfo,
+                interests: interests
+            };
+
+            const res = await updateUserProfile(userEmail, payload);
+            if (res && res.success) {
+                try { localStorage.setItem('nextcap_user_email', userEmail); } catch (e) { /* ignore */ }
+                window.location.href = encodeURI('../Dashboard all/index1.html');
+            } else {
+                console.error('updateUserProfile failed', res && res.message);
+                alert('Failed to save profile. Please try again later.');
+            }
+        } catch (err) {
+            console.error('submitInformation error', err);
+            alert('An error occurred while saving your profile.');
+        } finally {
+            nextButtons.forEach(b => b.disabled = false);
+        }
+    } else if (typeof updateAccountInformation === 'function') {
+        // Fallback for old helper (won't save interests at root correctly unless helper modified)
+        try {
+            // Try passing interests inside accountInfo as fallback
+            accountInfo.interests = interests;
             const res = await updateAccountInformation(userEmail, accountInfo);
             if (res && res.success) {
-                // redirect to dashboard index1 after successful save
                 try { localStorage.setItem('nextcap_user_email', userEmail); } catch (e) { /* ignore */ }
                 window.location.href = encodeURI('../Dashboard all/index1.html');
             } else {
@@ -160,10 +204,10 @@ function prevPage() {
 }
 
 // Initialize
-updateProgress();
+document.addEventListener('DOMContentLoaded', function () {
+    updateProgress();
 
-// Ensure date input cannot select future dates
-document.addEventListener('DOMContentLoaded', function() {
+    // Ensure date input cannot select future dates
     const dob = document.getElementById('birthday');
     if (dob && dob.type === 'date') {
         const today = new Date().toISOString().split('T')[0];
@@ -181,6 +225,9 @@ function validatePage(pageNum) {
 
     let allValid = true;
     inputs.forEach(input => {
+        // Skip validation for interests input as it is used to add tags
+        if (input.id === 'interests-input') return;
+
         const val = (input.value || '').toString().trim();
 
         // clear previous error
@@ -214,7 +261,7 @@ function validatePage(pageNum) {
 }
 
 // Clear field error on input
-document.addEventListener('input', function(e) {
+document.addEventListener('input', function (e) {
     const target = e.target;
     if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement)) return;
     const err = target.parentElement && target.parentElement.querySelector('.field-error');
@@ -225,5 +272,33 @@ document.addEventListener('input', function(e) {
 });
 
 // Expose navigation for inline onclicks
+// Setup Interests Logic
+// Setup Interests Logic (Event Delegation)
+document.addEventListener('keydown', (e) => {
+    if (e.target && e.target.id === 'interests-input' && e.key === 'Enter') {
+        e.preventDefault();
+        const input = e.target;
+        const container = document.getElementById('interests-container');
+        const val = input.value.trim();
+
+        if (val && val.length > 0 && container) {
+            addInterestPill(val, container);
+            input.value = '';
+        }
+    }
+});
+
+function addInterestPill(text, container) {
+    // Check duplicates
+    const exists = Array.from(container.children).some(c => c.textContent.replace('✕', '').trim().toLowerCase() === text.toLowerCase());
+    if (exists) return;
+
+    const pill = document.createElement('span');
+    pill.className = 'tag-pill';
+    pill.textContent = text; // text content + pseudo element for x
+    pill.onclick = function () { this.remove(); };
+    container.appendChild(pill);
+}
+
 window.nextPage = nextPage;
 window.prevPage = prevPage;

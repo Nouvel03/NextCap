@@ -19,8 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- DATE PICKER RESTRICTION ----
   const deadlineInput = document.getElementById('deadline-input');
   if (deadlineInput) {
-    const today = new Date().toISOString().split('T')[0];
-    deadlineInput.min = today;
+    // Get current time in local timezone for min attribute (datetime-local expects local time)
+    // new Date().toISOString() returns UTC. We want local.
+    const now = new Date();
+    // Adjust to local ISO string
+    const localIso = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+    deadlineInput.min = localIso;
   }
 
   // ---- TAG INPUT (Pills) ----
@@ -202,8 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // NOTE: User provided "standard_..." which looks like an API Key. 
   // Client SDKs usually need a Project ID (e.g., '65abcdef...').
   // We will try to use the provided string, but if it fails, the user needs to swap it for a Project ID.
-  const APPWRITE_PROJECT_ID = '6976dfe3003c64ccf790';
-  const APPWRITE_BUCKET_ID = '6976e0f20037f65994b0'; // Updated to user provided ID
+  const APPWRITE_PROJECT_ID = window.SECRETS.APPWRITE_PROJECT_ID;
+  const APPWRITE_BUCKET_ID = window.SECRETS.APPWRITE_BUCKET_ID; // Updated to user provided ID
 
   client
     .setEndpoint('https://cloud.appwrite.io/v1')

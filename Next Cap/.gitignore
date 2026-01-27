@@ -1,0 +1,4 @@
+# Secrets
+utils/secrets.js
+scripts/*.json
+node_modules/
