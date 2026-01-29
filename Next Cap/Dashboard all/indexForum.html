@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum | NextCap</title>
+    <link rel="icon" href="../favicon_io/favicon.ico" type="image/x-icon">
+    <!-- Link generic Layout styles -->
+    <link rel="stylesheet" href="index1.css">
+    <!-- Link Forum specific styles -->
+    <link rel="stylesheet" href="styles_forum.css">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- Secrets Config -->
+    <script src="../utils/secrets.js"></script>
+    <!-- Firebase Init -->
+    <script src="../utils/firebase_init.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <img src="images/logo.svg" alt="Logo" class="logo">
+        <div class="search-bar">
+            <input type="text" placeholder="Search topics...">
+        </div>
+        <div style="margin-left: auto; margin-right: 30px; display: flex; align-items: center; gap: 15px;">
+            <span id="welcome-message" style="font-weight: 600; color: #4a5568;"></span>
+            <div class="user-avatar"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">Menu</div>
+            <a href="index1.html" class="menu-item">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Home
+            </a>
+            <a href="#" class="menu-item nested">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Suggested Scholarships
+            </a>
+            <a href="index2.html" class="menu-item nested">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Verified Scholarships
+            </a>
+            <a href="index3.html" class="menu-item">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Dashboard
+            </a>
+            <a href="indexForum.html" class="menu-item active">
+                <img src="images/active.svg" alt="" class="menu-icon">
+                Forum
+            </a>
+            <a href="indexInformation.html" class="menu-item">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Profile
+            </a>
+            <a href="#" class="menu-item" onclick="logout()">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Log out
+            </a>
+        </div>
+
+        <div class="main-content">
+            <div class="forum-header-row">
+                <div class="forum-title">Community Forum</div>
+                <button class="create-post-btn" id="openCreateModal">
+                    <span>+</span> Create Post
+                </button>
+            </div>
+
+            <!-- Dynamic Content Container -->
+            <div id="forum-posts-container">
+                <div style="text-align:center; padding:20px; color:#a0aec0;">Loading discussions...</div>
+            </div>
+
+            <!-- Detail View Container -->
+            <div id="forum-post-detail-container" style="display: none;">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div class="forum-modal-overlay" id="createPostModal">
+        <div class="forum-modal">
+            <div class="forum-modal-header">
+                <div class="forum-modal-title">Create New Post</div>
+                <button class="close-modal-btn" id="closeModal">&times;</button>
+            </div>
+
+            <div class="forum-form-group">
+                <input type="text" class="forum-input" placeholder="Title of your discussion">
+            </div>
+
+            <!-- Dynamic Tag Input -->
+            <div class="forum-form-group">
+                <label
+                    style="display:block; margin-bottom:8px; font-weight:600; color:#4a5568; font-size:14px;">Tags</label>
+                <div class="tag-input-wrapper">
+                    <input type="text" id="tag-input" class="forum-input" placeholder="Type tag and press Enter"
+                        autocomplete="off">
+                    <button type="button" id="add-tag-btn" class="tag-input-btn">Add</button>
+                </div>
+                <div id="added-tags-container" class="added-tags-container">
+                    <!-- Dynamic pills injected here -->
+                </div>
+                <div style="font-size:12px; color:#a0aec0; margin-top:5px;">Press Enter to add tags</div>
+            </div>
+
+            <div class="forum-form-group">
+                <textarea class="forum-textarea" placeholder="What's on your mind?"></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancelBtn">Cancel</button>
+                <button class="btn-submit" id="submitBtn">Post</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="logout.js"></script>
+    <script type="module" src="forum.js"></script>
+</body>
+
+</html>
