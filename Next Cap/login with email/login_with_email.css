@@ -12,16 +12,124 @@ body {
 }
 
 .login-container {
+    --anim-duration: 420ms;
+    --anim-ease: cubic-bezier(0.16, 0.84, 0.24, 1);
+
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.985);
     background: white;
     padding: 36px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 30px rgba(12, 22, 33, 0.08);
     width: min(92%, 420px);
     max-width: 420px;
+
+    /* Animation Initial State */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--anim-duration) var(--anim-ease), transform calc(var(--anim-duration) * 1.05) var(--anim-ease), box-shadow var(--anim-duration) var(--anim-ease);
+    will-change: transform, opacity;
+}
+
+/* Card switching logic */
+.card {
+    display: none !important;
+}
+
+/* Active card becomes visible */
+.card.active {
+    display: block !important;
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 18px 50px rgba(12, 22, 33, 0.12);
+}
+
+/* Slide animations */
+.slide-out-right {
+    animation: slideOutRight var(--anim-duration) var(--anim-ease) forwards;
+}
+
+.slide-out-left {
+    animation: slideOutLeft var(--anim-duration) var(--anim-ease) forwards;
+}
+
+.slide-in-left {
+    animation: slideInLeft var(--anim-duration) var(--anim-ease) forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight var(--anim-duration) var(--anim-ease) forwards;
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(0) scale(1);
+    }
+
+    50% {
+        opacity: 0.65;
+        transform: translate(-50%, -50%) translateX(-20%) scale(0.995);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateX(-110%) scale(0.99);
+    }
+}
+
+@keyframes slideOutLeft {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(0) scale(1);
+    }
+
+    50% {
+        opacity: 0.65;
+        transform: translate(-50%, -50%) translateX(20%) scale(0.995);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateX(110%) scale(0.99);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateX(120%) scale(0.99);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(-6%) scale(1.002);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(0) scale(1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateX(-120%) scale(0.99);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(6%) scale(1.002);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateX(0) scale(1);
+    }
 }
 
 .login-container.card {
@@ -40,54 +148,149 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-.back-button img { width: 16px; height: 16px; display:block; }
-
-h2 { font-size: 26px; margin-bottom: 12px; color: #333; }
-.subtitle { font-size: 13px; color: #666; margin-bottom: 18px; }
-
-.form-group { margin-bottom: 16px; }
-label { display:block; font-size:14px; color:#333; margin-bottom:6px; }
-input[type="email"], input[type="password"] {
-    width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-size:14px; transition: border-color 0.15s;
+.back-button img {
+    width: 16px;
+    height: 16px;
+    display: block;
 }
-input:focus { outline:none; border-color:#F4B932; }
 
-.error-message { color:#e74c3c; font-size:12px; margin-top:6px; min-height:16px; }
+h2 {
+    font-size: 26px;
+    margin-bottom: 12px;
+    color: #333;
+}
 
-.continue-btn { width:100%; padding:14px; border:none; border-radius:6px; background:#F4B932; color:#222; font-weight:600; cursor:pointer; }
-.continue-btn:disabled { opacity:0.6; cursor:not-allowed; }
+.subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 18px;
+}
 
-.logo{
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.15s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #F4B932;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 6px;
+    min-height: 16px;
+}
+
+.continue-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    background: #F4B932;
+    color: #222;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.continue-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.forgot-password-link {
+    display: block;
+    text-align: right;
+    font-size: 13px;
+    color: #0d9488;
+    margin-bottom: 20px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+.logo {
     position: relative;
     left: 0;
     top: 0;
 }
 
-.cap{
+.cap {
     position: absolute;
     top: 205px;
     left: 58vw;
 }
-.cap img { width: 180px; }
+
+.cap img {
+    width: 180px;
+}
 
 /* Responsive small screens */
-@media (max-width:420px){
-    .login-container { width:92%; padding:24px; }
+@media (max-width:420px) {
+    .login-container {
+        width: 92%;
+        padding: 24px;
+    }
 }
 
 @media (max-width:480px) {
-    .back-button { width: 34px; height: 34px; }
-    .back-button img { width: 16px; height: 16px; }
-    .cap { display: none; }
+    .back-button {
+        width: 34px;
+        height: 34px;
+    }
+
+    .back-button img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .cap {
+        display: none;
+    }
 }
 
 @media (max-width:720px) {
-    .login-container { padding: 20px; width: calc(100% - 32px); }
-    .back-button { width: 34px; height: 34px; }
-    .back-button img { width: 16px; height: 16px; }
-    .cap { display: none; }
+    .login-container {
+        padding: 20px;
+        width: calc(100% - 32px);
+    }
+
+    .back-button {
+        width: 34px;
+        height: 34px;
+    }
+
+    .back-button img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .cap {
+        display: none;
+    }
 }

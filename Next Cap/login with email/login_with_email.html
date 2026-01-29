@@ -4,7 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NextCap - Login with Email</title>
+  <title>Login | NextCap</title>
+  <link rel="icon" href="../favicon_io/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="login_with_email.css">
   <!-- Firebase compat SDKs (same used in your other pages) -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -12,6 +13,18 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <!-- Secrets Config -->
   <script src="../utils/secrets.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function () {
+      if (window.SECRETS) {
+        emailjs.init({
+          publicKey: window.SECRETS.EMAILJS_PUBLIC_KEY,
+        });
+      } else {
+        console.error("Secrets not loaded for EmailJS init");
+      }
+    })();
+  </script>
 </head>
 
 <body>
@@ -43,8 +56,54 @@
       <div class="error-message" id="login-password-error"></div>
     </div>
 
+    <a href="#" class="forgot-password-link" id="forgot-password-link">Forgot Password?</a>
+
     <button class="continue-btn" id="login-btn">Log in</button>
-    <div class="resend-code"></div>
+  </div>
+
+  <!-- Forgot Password Cards -->
+  <div class="login-container card" id="forgot-password-card">
+    <button class="back-button" id="forgot-back-btn">
+      <img src="../Login page/images/back-svgrepo-com (1).svg" alt="Back">
+    </button>
+    <h2>Reset Password</h2>
+    <p class="subtitle">Enter your email to receive a verification code</p>
+    <div class="form-group">
+      <label for="forgot-email">Email</label>
+      <input type="email" id="forgot-email" placeholder="your.email@example.com">
+      <div class="error-message" id="forgot-email-error"></div>
+    </div>
+    <button class="continue-btn" id="send-otp-btn">Send Code</button>
+  </div>
+
+  <div class="login-container card" id="forgot-otp-card">
+    <button class="back-button" id="otp-back-btn">
+      <img src="../Login page/images/back-svgrepo-com (1).svg" alt="Back">
+    </button>
+    <h2>Verify your email</h2>
+    <p class="subtitle">Enter the code we sent to<br><strong id="otp-email-display"></strong></p>
+    <div class="form-group">
+      <label for="forgot-otp-input">Code</label>
+      <input type="text" id="forgot-otp-input" class="code-input" placeholder="Enter 6-digit code" maxlength="6">
+      <div class="error-message" id="forgot-otp-error"></div>
+    </div>
+    <button class="continue-btn" id="verify-otp-btn">Verify</button>
+  </div>
+
+  <div class="login-container card" id="reset-password-card">
+    <h2>New Password</h2>
+    <p class="subtitle">Create a new strong password</p>
+    <div class="form-group">
+      <label for="new-password">New Password</label>
+      <input type="password" id="new-password" placeholder="New password">
+      <div class="error-message" id="new-password-error"></div>
+    </div>
+    <div class="form-group">
+      <label for="confirm-password">Confirm Password</label>
+      <input type="password" id="confirm-password" placeholder="Confirm password">
+      <div class="error-message" id="confirm-password-error"></div>
+    </div>
+    <button class="continue-btn" id="reset-pass-btn">Update Password</button>
   </div>
 
 

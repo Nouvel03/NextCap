@@ -704,4 +704,25 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('applied-scholarships-container')) {
     renderAppliedScholarships();
   }
+  updateWelcomeMessage();
 });
+
+async function updateWelcomeMessage() {
+  const welcomeSpan = document.getElementById('welcome-message');
+  if (!welcomeSpan) return;
+
+  const email = localStorage.getItem('nextcap_user_email');
+  if (!email) {
+    welcomeSpan.textContent = "Welcome, Guest";
+    return;
+  }
+
+  const data = await fetchCurrentUserProfile(email);
+  const firstName = (data && data.account_information && data.account_information.firstName)
+    || (data && data.firstName)
+    || "Scholar";
+
+  // Capitalize first letter just in case
+  const name = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  welcomeSpan.textContent = `Welcome, ${name}`;
+}

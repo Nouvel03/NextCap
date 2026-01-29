@@ -137,6 +137,27 @@ async function setUserType(email, type) {
   }
 }
 
+// Update the password for a user identified by email
+async function updateUserPassword(email, newPassword) {
+  try {
+    const usersRef = db.collection('USERS');
+    const snapshot = await usersRef.where('email', '==', email).limit(1).get();
+    if (snapshot.empty) {
+      return { success: false, message: 'User not found' };
+    }
+
+    const doc = snapshot.docs[0];
+    const encryptedPassword = encrypt(newPassword);
+
+    await doc.ref.update({ password: encryptedPassword });
+    console.log('Password updated for', email);
+    return { success: true };
+  } catch (err) {
+    console.error('updateUserPassword error:', err);
+    return { success: false, message: err.message };
+  }
+}
+
 // ================================
 // EXPORT / GLOBAL
 // ================================
@@ -147,6 +168,7 @@ window.checkEmailExists = checkEmailExists;
 window.updateAccountInformation = updateAccountInformation;
 window.getUserByEmail = getUserByEmail;
 window.setUserType = setUserType;
+window.updateUserPassword = updateUserPassword;
 
 // Named export so other modules can import the helper directly
-export { saveUserToFirestore, checkEmailExists, updateAccountInformation, getUserByEmail, setUserType };
+export { saveUserToFirestore, checkEmailExists, updateAccountInformation, getUserByEmail, setUserType, updateUserPassword };

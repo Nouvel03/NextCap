@@ -24,6 +24,20 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: min(92%, 420px);
     max-width: 420px;
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 0.84, 0.24, 1) forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .back-button {
@@ -84,7 +98,11 @@ h2 {
 }
 
 /* Make images scale */
-img { max-width: 100%; height: auto; display: block; }
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
 
 .register-btn {
     background-color: #F4B932;
@@ -109,21 +127,35 @@ img { max-width: 100%; height: auto; display: block; }
     pointer-events: none;
 }
 
-.logo{
+.logo {
     position: relative;
     left: 0;
     top: 0;
 }
 
-.cap{
+.cap {
     position: absolute;
     top: 205px;
     left: 58vw;
 }
 
 @media (max-width: 480px) {
-    .login-container { padding: 20px; width: calc(100% - 32px); }
-    .back-button { width: 34px; height: 34px; }
-    .back-button img { width: 16px; height: 16px; }
-    .cap { display: none; }
+    .login-container {
+        padding: 20px;
+        width: calc(100% - 32px);
+    }
+
+    .back-button {
+        width: 34px;
+        height: 34px;
+    }
+
+    .back-button img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .cap {
+        display: none;
+    }
 }

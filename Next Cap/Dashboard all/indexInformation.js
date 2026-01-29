@@ -65,6 +65,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         console.log("User Data Loaded:", userData);
 
+        // Update Welcome Header
+        const welcomeSpan = document.getElementById('welcome-message');
+        if (welcomeSpan) {
+            const fName = (userData.account_information && userData.account_information.firstName) || userData.firstName || "Scholar";
+            welcomeSpan.textContent = `Welcome, ${fName.charAt(0).toUpperCase() + fName.slice(1)}`;
+        }
+
         // Populate fields
         for (const [inputId, firestorePath] of Object.entries(fieldsMap)) {
             const input = document.getElementById(inputId);

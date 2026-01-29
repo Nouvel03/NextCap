@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOST Scholarship</title>
+    <title>Verified | NextCap</title>
+    <link rel="icon" href="../favicon_io/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="index2.css">
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -19,7 +20,10 @@
         <div class="search-bar">
             <input type="text" placeholder="Search...">
         </div>
-        <div class="user-avatar"></div>
+        <div style="margin-left: auto; margin-right: 30px; display: flex; align-items: center; gap: 15px;">
+            <span id="welcome-message" style="font-weight: 600; color: #4a5568;"></span>
+            <div class="user-avatar"></div>
+        </div>
     </div>
 
     <div class="container">
@@ -43,11 +47,11 @@
             </a>
             <a href="indexInformation.html" class="menu-item">
                 <img src="images/not-active.svg" alt="" class="menu-icon">
-                Information
-            </a>
-            <a href="#" class="menu-item">
-                <img src="images/not-active.svg" alt="" class="menu-icon">
                 Profile
+            </a>
+            <a href="#" class="menu-item" onclick="logout()">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Log out
             </a>
         </div>
 
@@ -69,6 +73,7 @@
         </div>
     </div>
     <script src="scholarship_array.js"></script>
+    <script src="logout.js"></script>
 </body>
 
 </html>
