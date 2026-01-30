@@ -12,6 +12,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <!-- Secrets Config -->
     <script src="../utils/secrets.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
 </head>
 
 <body>
@@ -104,6 +106,68 @@
                     <button class="btn btn-teal">View as student</button>
                     <button class="btn btn-yellow">Edit</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Scholarship Modal -->
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal-btn">&times;</span>
+            <div class="form-header">
+                <div class="form-avatar"></div>
+                <div class="form-info">
+                    <input id="edit-school-input" class="form-input" placeholder="School / Grant"
+                        style="font-size:16px; font-weight:700; padding:8px 10px; border-radius:8px;" />
+                    <div style="font-size: 12px; color: #6b7280;">Editing Mode</div>
+                </div>
+            </div>
+
+            <label class="upload-area" for="edit-photo-input" tabindex="0" role="button">
+                <span class="upload-text">Upload Photo</span>
+                <input type="file" id="edit-photo-input" accept="image/*" class="upload-input" />
+                <img id="edit-preview-img" class="upload-preview-img" style="display:none;" />
+            </label>
+
+            <div class="input-group" style="margin-top: 15px;">
+                <label class="input-label">Title</label>
+                <input id="edit-title-input" class="form-input" placeholder="Title"
+                    style="width: 100%; font-size: 16px; padding: 10px;">
+            </div>
+
+            <div class="form-row">
+                <div class="input-group">
+                    <label class="input-label">Description</label>
+                    <textarea id="edit-desc-input" class="form-input"></textarea>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Tags</label>
+                    <input id="edit-tag-input" type="text" class="form-input" style="margin-bottom: 10px;"
+                        placeholder="Add tag and press Enter">
+                    <div id="edit-tags-container" class="tags-input-container"></div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-group">
+                    <label class="input-label">Application Deadline</label>
+                    <input id="edit-deadline-input" type="datetime-local" class="form-input">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Number of slots</label>
+                    <input id="edit-slots-input" type="text" class="form-input">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Requirements List</label>
+                <input id="edit-req-input" type="text" class="form-input" style="margin-bottom: 10px;"
+                    placeholder="Add requirement and press Enter">
+                <div id="edit-req-container" class="tags-input-container"></div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-cancel" id="cancel-edit-btn">Cancel</button>
+                <button id="update-btn" class="btn btn-update">Update</button>
             </div>
         </div>
     </div>

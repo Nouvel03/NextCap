@@ -3,27 +3,38 @@ import initAdminPage from './admin.js';
 // Initialize the shared admin logic (sidebar, strict auth check)
 initAdminPage();
 
-// Main Logic for Manage Scholarships
-document.addEventListener('DOMContentLoaded', () => {
-    // Wait for auth check to pass? initAdminPage does it async.
-    // We can just start loading data; if auth fails, page redirects anyway.
-    loadManagedScholarships();
-});
-
 const db = firebase.firestore();
+
+// Appwrite Init
+const client = new Appwrite.Client();
+const APPWRITE_PROJECT_ID = window.SECRETS.APPWRITE_PROJECT_ID;
+const APPWRITE_BUCKET_ID = window.SECRETS.APPWRITE_BUCKET_ID;
+
+client
+    .setEndpoint('https://cloud.appwrite.io/v1')
+    .setProject(APPWRITE_PROJECT_ID);
+
+const storage = new Appwrite.Storage(client);
+
+let currentEditingId = null;
+
+// Main Logic
+document.addEventListener('DOMContentLoaded', () => {
+    loadManagedScholarships();
+    setupModalListeners();
+    setupTagInput('edit-tag-input', 'edit-tags-container');
+    setupRequirementsInput('edit-req-input', 'edit-req-container');
+    setupImagePreview();
+});
 
 async function loadManagedScholarships() {
     const mainContent = document.querySelector('.main-content');
     if (!mainContent) return;
 
-    // Use existing controls if present, or keep them.
-    // We want to replace the static .scholarship-card with our dynamic list.
-    // Let's create a container for the list if it doesn't exist.
     let listContainer = document.getElementById('scholarship-list-container');
     if (!listContainer) {
         listContainer = document.createElement('div');
         listContainer.id = 'scholarship-list-container';
-        // Insert after controls
         const controls = document.querySelector('.content-controls');
         if (controls) {
             controls.insertAdjacentElement('afterend', listContainer);
@@ -31,7 +42,6 @@ async function loadManagedScholarships() {
             mainContent.appendChild(listContainer);
         }
 
-        // Remove the static example card if it exists
         const staticCard = document.querySelector('.scholarship-card');
         if (staticCard) staticCard.remove();
     }
@@ -42,7 +52,7 @@ async function loadManagedScholarships() {
         const snapshot = await db.collection('SCHOLARSHIPS').orderBy('time_of_creation', 'desc').get();
 
         if (snapshot.empty) {
-            listContainer.innerHTML = '<p style="padding:20px; color:#718096;">No scholarships found. Create one?</p>';
+            listContainer.innerHTML = '<p style="padding:20px; color:#718096;">No scholarships found.</p>';
             return;
         }
 
@@ -64,9 +74,8 @@ async function loadManagedScholarships() {
 function createAdminCard(id, s) {
     const card = document.createElement('div');
     card.className = 'scholarship-card';
-    card.style.marginBottom = '20px'; // spacing
+    card.style.marginBottom = '20px';
 
-    // Calculate dates
     let dateStr = "Recently";
     if (s.time_of_creation) {
         const d = s.time_of_creation.toDate ? s.time_of_creation.toDate() : new Date(s.time_of_creation);
@@ -74,19 +83,15 @@ function createAdminCard(id, s) {
             '<br>' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase();
     }
 
-    // Active Status Logic
-    const isActive = s.active !== false; // Default true if undefined
+    const isActive = s.active !== false;
     const statusText = isActive ? 'Active' : 'Inactive';
-    const statusClass = isActive ? 'status-pill' : 'status-pill inactive'; // We might need css for .inactive
+    const statusClass = isActive ? 'status-pill' : 'status-pill inactive';
     const btnText = isActive ? 'Deactivate' : 'Activate';
-    const btnClass = isActive ? 'btn btn-red' : 'btn btn-teal'; // Reuse teal for activate or green
+    const btnClass = isActive ? 'btn btn-red' : 'btn btn-teal';
 
-    // Tags
     const tagsHTML = (Array.isArray(s.tags) ? s.tags : [])
         .map(t => {
             const label = typeof t === 'string' ? t : t.name;
-            // coloring logic (simple hash or default)
-            // Added display:inline-flex, flex-wrap, text-align:center logic
             return `<span class="tag" style="background-color:#1e40af; color:white; display:inline-flex; align-items:center; justify-content:center; text-align:center; min-height:24px; white-space:normal; line-height:1.2; word-break: break-word;">${label}</span>`;
         }).join('');
 
@@ -128,9 +133,11 @@ function createAdminCard(id, s) {
         </div>
     `;
 
-    // Attach Listeners
     const toggleBtn = card.querySelector('.toggle-status-btn');
     toggleBtn.addEventListener('click', () => toggleScholarshipStatus(id, isActive));
+
+    const editBtn = card.querySelector('.edit-btn');
+    editBtn.addEventListener('click', () => openEditModal(id, s));
 
     return card;
 }
@@ -141,10 +148,244 @@ async function toggleScholarshipStatus(id, currentStatus) {
 
     try {
         await db.collection('SCHOLARSHIPS').doc(id).update({ active: newStatus });
-        // Reload to reflect changes
         loadManagedScholarships();
     } catch (err) {
         console.error("Error updating status:", err);
         alert("Failed to update status.");
     }
+}
+
+// ---- Modal Logic ----
+
+function setupModalListeners() {
+    const modal = document.getElementById('edit-modal');
+    const closeBtn = modal.querySelector('.close-modal-btn');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    const updateBtn = document.getElementById('update-btn');
+
+    const closeModal = () => {
+        modal.style.display = 'none';
+        currentEditingId = null;
+    };
+
+    closeBtn.onclick = closeModal;
+    cancelBtn.onclick = closeModal;
+
+    window.onclick = (e) => {
+        if (e.target === modal) closeModal();
+    };
+
+    updateBtn.onclick = updateScholarship;
+}
+
+function openEditModal(id, data) {
+    currentEditingId = id;
+    const modal = document.getElementById('edit-modal');
+
+    // Populate fields
+    document.getElementById('edit-school-input').value = data.from || '';
+    document.getElementById('edit-title-input').value = data.title || '';
+    document.getElementById('edit-desc-input').value = data.description || '';
+    document.getElementById('edit-slots-input').value = data.amount_of_participants || '';
+
+    // Deadline (handle various formats if needed, assuming ISO or string for now)
+    // indexUpload sets datetime-local, so it expects "YYYY-MM-DDTHH:mm"
+    if (data.deadline) {
+        document.getElementById('edit-deadline-input').value = data.deadline;
+    }
+
+    // Populate Tags
+    const tagsContainer = document.getElementById('edit-tags-container');
+    tagsContainer.innerHTML = '';
+    const tags = Array.isArray(data.tags) ? data.tags : [];
+    tags.forEach(t => {
+        const text = typeof t === 'string' ? t : t.name;
+        addTagPill(text, tagsContainer);
+    });
+
+    // Populate Requirements
+    const reqContainer = document.getElementById('edit-req-container');
+    reqContainer.innerHTML = '';
+    const reqs = Array.isArray(data.requirements) ? data.requirements : [];
+    reqs.forEach(r => {
+        addReqItem(r, reqContainer);
+    });
+
+    // Image Preview
+    const imgPreview = document.getElementById('edit-preview-img');
+    const uploadText = modal.querySelector('.upload-text');
+    if (data.image_id) {
+        imgPreview.src = data.image_id;
+        imgPreview.style.display = 'block';
+        if (uploadText) uploadText.style.display = 'none';
+    } else {
+        imgPreview.style.display = 'none';
+        imgPreview.src = '';
+        if (uploadText) uploadText.style.display = 'block';
+    }
+
+    // Clear File Input
+    document.getElementById('edit-photo-input').value = '';
+
+    modal.style.display = 'flex';
+}
+
+async function updateScholarship() {
+    if (!currentEditingId) return;
+
+    const btn = document.getElementById('update-btn');
+    btn.disabled = true;
+    btn.textContent = 'Updating...';
+
+    try {
+        const title = document.getElementById('edit-title-input').value;
+        const from = document.getElementById('edit-school-input').value;
+        const description = document.getElementById('edit-desc-input').value;
+        const slots = document.getElementById('edit-slots-input').value;
+        const deadline = document.getElementById('edit-deadline-input').value;
+
+        const tags = Array.from(document.getElementById('edit-tags-container').children)
+            .map(el => el.textContent.replace('✕', '').trim());
+
+        const requirements = Array.from(document.getElementById('edit-req-container').children)
+            .map(el => el.querySelector('span')?.textContent || el.textContent.replace('×', '').trim());
+
+        const fileInput = document.getElementById('edit-photo-input');
+        let fileUrl = null;
+
+        if (fileInput.files.length > 0) {
+            // New file selected, upload it
+            const file = fileInput.files[0];
+            const uniqueId = `img_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+
+            try {
+                const result = await storage.createFile(APPWRITE_BUCKET_ID, uniqueId, file);
+                const uploadedId = result.$id;
+
+                try {
+                    const urlObj = storage.getFileView(APPWRITE_BUCKET_ID, uploadedId);
+                    fileUrl = urlObj.href || urlObj.toString();
+                } catch (e) {
+                    fileUrl = uploadedId;
+                }
+            } catch (err) {
+                console.error("Appwrite upload failed:", err);
+                alert("Image upload failed, but continuing with update...");
+            }
+        }
+
+        const updateData = {
+            title, from, description, amount_of_participants: slots, deadline, tags, requirements
+        };
+
+        if (fileUrl) {
+            updateData.image_id = fileUrl;
+        }
+
+        await db.collection('SCHOLARSHIPS').doc(currentEditingId).update(updateData);
+
+        alert("Scholarship Updated Successfully!");
+        document.getElementById('edit-modal').style.display = 'none';
+        loadManagedScholarships();
+
+    } catch (err) {
+        console.error("Update failed:", err);
+        alert("Failed to update scholarship.");
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Update';
+    }
+}
+
+// ---- Helpers (Tags/Reqs) ----
+
+function setupTagInput(inputId, containerId) {
+    const input = document.getElementById(inputId);
+    const container = document.getElementById(containerId);
+    if (!input || !container) return;
+
+    input.addEventListener('keydown', e => {
+        if (e.key !== 'Enter' && e.key !== ',') return;
+        e.preventDefault();
+        const text = input.value.trim().replace(/,/g, '');
+        if (!text) return;
+
+        addTagPill(text, container);
+        input.value = '';
+    });
+}
+
+function addTagPill(text, container) {
+    // Check dupe
+    const exists = [...container.children].some(
+        t => t.textContent.replace('✕', '').trim().toLowerCase() === text.toLowerCase()
+    );
+    if (exists) return;
+
+    const pill = document.createElement('span');
+    pill.className = 'tag-pill close';
+    pill.textContent = text;
+    pill.onclick = () => pill.remove();
+    container.appendChild(pill);
+}
+
+function setupRequirementsInput(inputId, containerId) {
+    const input = document.getElementById(inputId);
+    const container = document.getElementById(containerId);
+    if (!input || !container) return;
+
+    input.addEventListener('keydown', e => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+
+        addReqItem(text, container);
+        input.value = '';
+    });
+}
+
+function addReqItem(text, container) {
+    const exists = [...container.children].some(
+        t => t.innerText.replace('×', '').trim().toLowerCase() === text.toLowerCase()
+    );
+    if (exists) return;
+
+    const item = document.createElement('div');
+    item.className = 'req-item';
+
+    const span = document.createElement('span');
+    span.textContent = text;
+
+    const removeBtn = document.createElement('span');
+    removeBtn.className = 'remove-req';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.onclick = () => item.remove();
+
+    item.appendChild(span);
+    item.appendChild(removeBtn);
+
+    container.appendChild(item);
+}
+
+function setupImagePreview() {
+    const fileInput = document.getElementById('edit-photo-input');
+    const uploadArea = document.querySelector('#edit-modal .upload-area');
+    const uploadText = uploadArea.querySelector('.upload-text');
+    const img = document.getElementById('edit-preview-img');
+
+    if (!fileInput) return;
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target.result;
+                img.style.display = 'block';
+                if (uploadText) uploadText.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 }

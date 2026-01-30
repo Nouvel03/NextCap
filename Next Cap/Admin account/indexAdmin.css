@@ -333,3 +333,212 @@ body {
     background: #ecc94b;
     color: #744210;
 }
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #a0aec0;
+}
+
+.close-modal-btn:hover {
+    color: #4a5568;
+}
+
+/* Form Card Styles (Adapted from indexUpload.css) */
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.form-avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #cbd5e0;
+    border-radius: 50%;
+}
+
+.form-info h4 {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.upload-area {
+    width: 100%;
+    height: 350px;
+    background-color: #d1d5db;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    color: #4b5563;
+    font-size: 48px;
+    font-weight: 500;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.upload-area img.upload-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+}
+
+.upload-area input.upload-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    font-size: 14px;
+}
+
+textarea.form-input {
+    height: 120px;
+    resize: none;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row>div {
+    flex: 1;
+}
+
+.tags-input-container {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9fafb;
+    min-height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: flex-start;
+}
+
+.tag-pill {
+    background-color: #1e40af;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px;
+    cursor: default;
+}
+
+.tag-pill.close::after {
+    content: "✕";
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-cancel {
+    background-color: #ef4444;
+    color: white;
+}
+
+.btn-update {
+    background-color: #ecc94b;
+    color: #744210;
+}
+
+.req-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.req-item .remove-req {
+    cursor: pointer;
+    color: #9ca3af;
+    font-weight: bold;
+    padding: 4px;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+.req-item .remove-req:hover {
+    color: #ef4444;
+}

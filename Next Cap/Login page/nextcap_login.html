@@ -7,12 +7,9 @@
     <link rel="stylesheet" href="styles.css">
     <title>NextCap - Login</title>
     <link rel="icon" href="../favicon_io/favicon.ico" type="image/x-icon">
-    <!-- Google Identity Services - Required for Google Sign-In -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <!-- Firebase compat SDKs required for saving Gmail users -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <!-- Secrets Config -->
     <script src="../utils/secrets.js"></script>
 </head>
 
@@ -37,19 +34,16 @@
             Continue with Google
         </button>
 
-        <!-- Sign up with email (opens existing signup flow) -->
         <button class="login-btn" id="email-signup-btn"
             onclick="location.href=encodeURI('../continue with email/continue with email.html')">
             Sign up with email
         </button>
 
-        <!-- Login with email (opens login form in login with email folder) -->
         <button class="login-btn" id="email-login-btn"
             onclick="location.href=encodeURI('../login with email/login_with_email.html')">
             Login with email
         </button>
 
-        <!-- Register removed -->
     </div>
 
     <div class="bottom-shapes">

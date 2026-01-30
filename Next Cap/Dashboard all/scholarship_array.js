@@ -1,5 +1,4 @@
-// scholarship_array.js - Modified to fetch from Firestore
-// Note: This script assumes firebase-app-compat and firebase-firestore-compat are loaded
+
 
 
 const firebaseConfig = {
@@ -21,18 +20,15 @@ const db = firebase.firestore();
 
 function createTagsHTML(tags) {
   if (!tags || !Array.isArray(tags)) return '';
-  // Default teal color for dynamic tags unless specified
   return tags.map(t => {
     const name = typeof t === 'string' ? t : t.name;
     const color = (typeof t === 'object' && t.color) ? t.color : "#1e40af";
-    // Inline styles for pill look (matched to user preference)
     return `<span class="tag" style="background-color:${color}; display:inline-block; padding:4px 12px; border-radius:20px; color:white; font-size:12px; font-weight:600; margin-right:5px; margin-bottom:5px;">${name}</span>`;
   }).join('');
 }
 
 
 function createCardHTML(s) {
-  // Format timestamp if available
   let dateStr = "Recently";
   let timeStr = "";
   if (s.time_of_creation) {
@@ -41,7 +37,6 @@ function createCardHTML(s) {
     timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
   }
 
-  // Image handling: s.image_id is now the URL
   const imageStyle = s.image_id ? `background-image: url('${s.image_id}'); background-size: cover; background-position: center;` : '';
 
   return `
@@ -90,7 +85,6 @@ function createCardHTML(s) {
 let currentUserData = null;
 let currentUserDocId = null;
 
-// Helper: Fetch full user profile
 async function fetchCurrentUserProfile(email) {
   if (!email) return null;
   if (currentUserData) return currentUserData; // Return cached
@@ -253,7 +247,6 @@ window.viewScholarship = async function (id) {
   const mainContent = document.querySelector('.main-content');
   if (!mainContent) return;
 
-  // Ensure we have user profile loaded to check status
   const email = localStorage.getItem('nextcap_user_email');
   if (email && !currentUserData) {
     await fetchCurrentUserProfile(email);
@@ -277,7 +270,6 @@ window.viewScholarship = async function (id) {
     s.tags = Array.isArray(s.tags) ? s.tags : [];
     const reqArray = Array.isArray(s.requirements) ? s.requirements : [];
 
-    // Check Application Status
     const isApplied = currentUserData &&
       currentUserData.applied_scholarships &&
       currentUserData.applied_scholarships[s.id];
@@ -326,7 +318,7 @@ window.viewScholarship = async function (id) {
                         <div style="display:flex; gap: 8px; margin-bottom: 20px; flex-wrap:wrap;">
                              <span style="background-color: #edf2f7; color: #4a5568; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${dateStr}</span>
                              <span style="background-color: #edf2f7; color: #4a5568; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${s.current_participants || 0} Applicants</span>
-                             <span style="background-color: #ebf8ff; color: #3182ce; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${(s.amount_of_participants || 0) - (s.current_participants || 0)} Slots Left</span>
+                             <span style="background-color: #ebf8ff; color: #3182ce; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${s.amount_of_participants || 0} Slots</span>
                         </div>
 
                         <div class="tags" style="margin-bottom: 0;">${createTagsHTML(s.tags)}</div>
@@ -412,7 +404,7 @@ async function renderFirestoreScholarships() {
     }
     const snapshot = await db.collection('SCHOLARSHIPS').get();
 
-    container.innerHTML = ''; // Clear loading
+    container.innerHTML = '';
 
     if (snapshot.empty) {
       container.innerHTML = '<div class="post-card"><div class="post-body"><p style="padding:20px; color:#718096">No scholarships found.</p></div></div>';
@@ -431,7 +423,7 @@ async function renderFirestoreScholarships() {
       const d2 = b.data().time_of_creation;
       const t1 = d1 && d1.toMillis ? d1.toMillis() : 0;
       const t2 = d2 && d2.toMillis ? d2.toMillis() : 0;
-      return t2 - t1; // Descending
+      return t2 - t1;
     });
 
     docs.forEach(doc => {
@@ -509,6 +501,7 @@ async function renderSuggestedScholarships() {
 
     snapshot.forEach(doc => {
       const data = doc.data();
+      if (data.active === false) return;
 
       const sTags = [
         ...(Array.isArray(data.tags) ? data.tags : []),
@@ -563,14 +556,10 @@ async function renderAppliedScholarships() {
     const appliedMap = currentUserData.applied_scholarships;
     const appliedIds = Object.keys(appliedMap);
 
-    const countSpan = document.getElementById('active-applications-count');
-    if (countSpan) countSpan.textContent = appliedIds.length;
+    // Clear "Loading..." text now that we have data
+    container.innerHTML = '';
 
-
-    if (appliedIds.length === 0) {
-      container.innerHTML = '<p>No active applications.</p>';
-      return;
-    }
+    let displayedCount = 0;
 
     for (const id of appliedIds) {
       const appData = appliedMap[id];
@@ -579,6 +568,10 @@ async function renderAppliedScholarships() {
         if (!sDoc.exists) continue;
 
         const s = { id: sDoc.id, ...sDoc.data() };
+        if (s.active === false) continue; // Skip inactive scholarships
+
+        displayedCount++;
+
         s.tags = Array.isArray(s.tags) ? s.tags : [];
 
         // Custom Card for Applied View
@@ -642,6 +635,9 @@ async function renderAppliedScholarships() {
         console.error("Error loading applied scholarship:", id, err);
       }
     }
+
+    const countSpan = document.getElementById('active-applications-count');
+    if (countSpan) countSpan.textContent = displayedCount;
 
   } catch (err) {
     console.error("Error rendering dashboard:", err);
