@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+.mobile-logo {
+    display: none;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
@@ -109,7 +113,11 @@ h2 {
     height: 20px;
 }
 
-img { max-width: 100%; height: auto; display: block; }
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
 
 .register-btn {
     background-color: #F4B932;
@@ -173,21 +181,64 @@ img { max-width: 100%; height: auto; display: block; }
     pointer-events: none;
 }
 
-.logo{
+.logo {
     position: relative;
     left: 0;
     top: 0;
 }
 
-.cap{
+.cap {
     position: absolute;
     top: 205px;
     left: 58vw;
 }
 
 @media (max-width: 480px) {
-    .login-container { padding: 20px; width: calc(100% - 32px); }
-    .back-button { width: 34px; height: 34px; }
-    .back-button img { width: 16px; height: 16px; }
-    .cap { display: none; }
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* Allow scrolling if content is tall, start from top with some space */
+        justify-content: flex-start;
+        padding-top: 50px;
+        min-height: 100vh;
+    }
+
+    .login-container {
+        padding: 20px;
+        width: calc(100% - 32px);
+        /* Reset positioning to static/relative for flex flow */
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        margin-bottom: 40px;
+        /* Space at bottom */
+    }
+
+    .back-button {
+        width: 34px;
+        height: 34px;
+    }
+
+    .back-button img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .cap,
+    .logo {
+        display: none;
+    }
+
+    .mobile-logo {
+        display: block;
+        width: 150px;
+        height: auto;
+        margin-bottom: 30px;
+        /* Space between logo and card */
+        position: static;
+        /* Natural flow */
+        transform: none;
+    }
 }

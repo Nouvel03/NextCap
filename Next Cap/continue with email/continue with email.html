@@ -1,67 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextCap - Create account</title>
     <link rel="stylesheet" href="styles.css">
-    <script type="text/javascript"
-    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-</script>
-<script type="text/javascript">
-(function(){
-  emailjs.init({
-    publicKey: "__FIfnIZD_eDM4iR5",
-  });
-})();
-</script>
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init({
+                publicKey: "__FIfnIZD_eDM4iR5",
+            });
+        })();
+    </script>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
+    <!-- Desktop Logo -->
     <div class="logo">
-        <img src="images/Group 21.svg" alt="Scholarly Logo">
+        <img src="images/Group 21.svg" alt="NextCap Logo">
     </div>
 
-    <div class="cap">
-        <img src="images/Group 11.svg" alt="tilted graduation cap">
-    </div>
 
+    <!-- Mobile Logo -->
+    <img src="images/mobile_logo.svg" class="mobile-logo" alt="NextCap Mobile Logo">
+
+    <!-- Main Content Container -->
     <!-- Email Card -->
     <div class="login-container card active" id="email-card">
-        <button class="back-button" id="email-back-btn">
-            <img src="images/back-svgrepo-com (1).svg" alt="Back">
+        <button class="back-button" id="email-back-btn" aria-label="Go back">
+            <img src="images/back-svgrepo-com (1).svg" alt="">
         </button>
         <h2>Create your account</h2>
         <p class="subtitle">Enter your email to get started</p>
-        
+
         <div class="form-group">
             <label for="email-input">Email</label>
             <input type="email" id="email-input" placeholder="your.email@example.com" autocomplete="email">
-            <div class="error-message" id="email-error"></div>
+            <div class="error-message" id="email-error" role="alert"></div>
         </div>
         <button class="continue-btn" id="email-continue-btn">Continue</button>
     </div>
 
     <!-- OTP Card -->
     <div class="login-container card" id="otp-card">
-        <button class="back-button" id="otp-back-btn">
-            <img src="images/back-svgrepo-com (1).svg" alt="Back">
+        <button class="back-button" id="otp-back-btn" aria-label="Go back">
+            <img src="images/back-svgrepo-com (1).svg" alt="">
         </button>
         <h2>Verify your email</h2>
         <p class="subtitle">Enter the code we sent to<br><strong id="otp-email-display"></strong></p>
-        
+
         <div class="form-group">
             <label for="otp-input" class="code-label">Code</label>
-            <input type="text" id="otp-input" class="code-input" placeholder="Enter 6-digit code" maxlength="6">
-            <div class="error-message" id="otp-error"></div>
+            <input type="text" id="otp-input" class="code-input" placeholder="Enter 6-digit code" maxlength="6"
+                inputmode="numeric" pattern="[0-9]*">
+            <div class="error-message" id="otp-error" role="alert"></div>
         </div>
         <button class="continue-btn" id="otp-continue-btn">Continue</button>
-        
+
         <div class="resend-code">
             Didn't get the code? <a href="#" id="resend-link">Resend code</a>
         </div>
@@ -69,37 +71,38 @@
 
     <!-- Password Card -->
     <div class="login-container card" id="password-card">
-        <button class="back-button" id="password-back-btn">
-            <img src="images/back-svgrepo-com (1).svg" alt="Back">
+        <button class="back-button" id="password-back-btn" aria-label="Go back">
+            <img src="images/back-svgrepo-com (1).svg" alt="">
         </button>
         <h2>Create your password</h2>
         <p class="subtitle">Choose a strong password for your account</p>
-        
+
         <div class="form-group">
             <label for="password-input">Password</label>
             <input type="password" id="password-input" placeholder="Enter your password" autocomplete="new-password">
-            <div class="error-message" id="password-error"></div>
+            <div class="error-message" id="password-error" role="alert"></div>
         </div>
-        
+
         <div class="form-group">
             <label for="confirm-password-input">Confirm Password</label>
-            <input type="password" id="confirm-password-input" placeholder="Confirm your password" autocomplete="new-password">
-            <div class="error-message" id="confirm-password-error"></div>
+            <input type="password" id="confirm-password-input" placeholder="Confirm your password"
+                autocomplete="new-password">
+            <div class="error-message" id="confirm-password-error" role="alert"></div>
         </div>
-        
+
         <button class="continue-btn" id="password-continue-btn">Create Account</button>
     </div>
 
+    <!-- Bottom Decorative Shapes -->
     <div class="bottom-shapes">
-       <img src="images/Group 19.svg">
+        <img src="images/Group 19.svg" alt="">
     </div>
-    <!-- Load EmailJS SDK first -->
 
-
-<!-- Your scripts that depend on EmailJS -->
-<script type="module" src="../FirebaseUtils/FirebaseUtils_Login.js"></script>
-<script src="../app.js"></script>
-<script src="email-flow.js"></script>
+    <!-- Scripts -->
+    <script type="module" src="../FirebaseUtils/FirebaseUtils_Login.js"></script>
+    <script src="../app.js"></script>
+    <script src="email-flow.js"></script>
 
 </body>
+
 </html>
