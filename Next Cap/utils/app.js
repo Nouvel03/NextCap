@@ -1,7 +1,6 @@
 
 console.log('app.js loaded successfully!');
 if (localStorage.getItem('nextcap_user_email')) {
-    // User is already logged in, redirect to Dashboard
     window.location.href = encodeURI('../Dashboard all/index1.html');
 }
 import { saveUserToFirestore, getUserByEmail } from '../FirebaseUtils/FirebaseUtils_Login.js';

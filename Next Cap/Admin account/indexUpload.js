@@ -4,9 +4,7 @@ import { createScholarship } from '../FirebaseUtils/Firebase_CRUD.js';
 console.log('[indexUpload] module loaded');
 
 document.addEventListener('DOMContentLoaded', () => {
-  /* ... existing DOM ready logic ... */
-  // (Re-declaring initAdminPage call for context if needed, but we keep existing structure)
-  // ---- Safe admin init ----
+
   try {
     if (typeof initAdminPage === 'function') {
       initAdminPage();
@@ -16,25 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('[indexUpload] admin init failed', err);
   }
 
-  // ---- DATE PICKER RESTRICTION ----
   const deadlineInput = document.getElementById('deadline-input');
   if (deadlineInput) {
-    // Get current time in local timezone for min attribute (datetime-local expects local time)
-    // new Date().toISOString() returns UTC. We want local.
+
     const now = new Date();
-    // Adjust to local ISO string
     const localIso = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
     deadlineInput.min = localIso;
   }
 
-  // ---- TAG INPUT (Pills) ----
   function setupTagInput(inputId, containerId) {
     const input = document.getElementById(inputId);
     const container = document.getElementById(containerId);
 
     if (!input || !container) return;
 
-    // Remove on click for existing static tags (if any)
     Array.from(container.getElementsByClassName('tag-pill')).forEach(pill => {
       pill.onclick = () => pill.remove();
     });
@@ -64,14 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ---- REQUIREMENTS INPUT (Full Width Items) ----
   function setupRequirementsInput(inputId, containerId) {
     const input = document.getElementById(inputId);
     const container = document.getElementById(containerId);
 
     if (!input || !container) return;
 
-    // Remove on click for existing static requirements (if any)
     Array.from(container.getElementsByClassName('req-item')).forEach(item => {
       const removeBtn = item.querySelector('.remove-req');
       if (removeBtn) {
@@ -86,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const text = input.value.trim();
       if (!text) return;
 
-      // Simple duplicate check
       const exists = [...container.children].some(
         t => t.innerText.replace('×', '').trim().toLowerCase() === text.toLowerCase()
       );
@@ -117,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTagInput('tag-input', 'tags-container');
   setupRequirementsInput('req-input', 'req-container');
 
-  // ---- IMAGE PREVIEW ----
   const uploadArea = document.querySelector('.upload-area');
   const fileInput = document.getElementById('photo-input');
 
@@ -131,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Debug: Log clicks on the wrapper to ensure it's interactive
   uploadArea.addEventListener('click', (e) => {
     console.log('[indexUpload] upload-area clicked at', new Date().toISOString(), 'Target:', e.target.tagName, 'Class:', e.target.className);
   });
@@ -157,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Hide the text
     const uploadText = uploadArea.querySelector('.upload-text');
     console.log('[indexUpload] uploadText element found:', !!uploadText);
 
@@ -165,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
       uploadText.style.display = 'none';
     }
 
-    // Check if image already exists
     let img = uploadArea.querySelector('.upload-preview-img');
     console.log('[indexUpload] Existing preview image found:', !!img);
 
@@ -174,9 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
       img = document.createElement('img');
       img.className = 'upload-preview-img';
 
-      // Append image, ensuring we don't clobber the input which is hidden
-      // We append it to uploadArea. 
-      // Note: If input is absolute/z-index 3, it should sit on top of this img.
       uploadArea.appendChild(img);
     } else {
       console.log('[indexUpload] reusing existing image element');
@@ -203,9 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- APPWRITE & POST LOGIC ----
   const client = new Appwrite.Client();
 
-  // NOTE: User provided "standard_..." which looks like an API Key. 
-  // Client SDKs usually need a Project ID (e.g., '65abcdef...').
-  // We will try to use the provided string, but if it fails, the user needs to swap it for a Project ID.
   const APPWRITE_PROJECT_ID = window.SECRETS.APPWRITE_PROJECT_ID;
   const APPWRITE_BUCKET_ID = window.SECRETS.APPWRITE_BUCKET_ID; // Updated to user provided ID
 
@@ -218,32 +198,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const postBtn = document.getElementById('post-btn');
   if (postBtn) {
     postBtn.addEventListener('click', async () => {
-      // 1. Gather Data
       const from = document.getElementById('school-input')?.value || '';
       const title = document.getElementById('title-input')?.value || '';
-      // const deadline = document.getElementById('deadline-input')?.value || ''; 
-      // (Already defined earlier as deadlineInput variable, usually safe to re-get or reuse)
+
       const deadline = document.getElementById('deadline-input')?.value;
       const slots = document.getElementById('slots-input')?.value;
       const descriptionWrapper = document.getElementById('desc-input');
-      // If description is a textarea or inside one
       const description = descriptionWrapper?.value || '';
 
-      // Gather Tags
       const tags = Array.from(document.getElementById('tags-container')?.children || [])
         .map(el => el.textContent.replace('✕', '').trim());
 
-      // Gather Requirements as Array
       const requirements = Array.from(document.getElementById('req-container')?.children || [])
         .map(el => el.querySelector('span')?.textContent || el.textContent.replace('×', '').trim());
 
-      // 2. Validate
       if (!title || !from || !deadline || !description) {
         alert('Please fill in all required fields (School/Grant, Title, Deadline, Description)');
         return;
       }
 
-      const file = fileInput?.files?.[0]; // defined in existing scope
+      const file = fileInput?.files?.[0];
       if (!file) {
         alert('Please select an image to upload.');
         return;
@@ -254,8 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
       postBtn.textContent = 'Posting...';
 
       try {
-        // 4. Upload Image to Appwrite
-        // Generate a custom ID to safeguard the link between Appwrite and Firebase
+
         const uniqueId = `img_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
         console.log('[indexUpload] Uploading image to Appwrite with ID:', uniqueId);
 
@@ -263,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           const result = await storage.createFile(
             APPWRITE_BUCKET_ID,
-            uniqueId, // Set the image ID explicitly
+            uniqueId,
             file
           );
           uploadedId = result.$id;
@@ -274,10 +247,8 @@ document.addEventListener('DOMContentLoaded', () => {
           uploadedId = 'mock_' + uniqueId;
         }
 
-        // Get the View URL
         let fileUrl = '';
         try {
-          // getFileView returns a URL object in recent SDKs
           const urlObj = storage.getFileView(APPWRITE_BUCKET_ID, uploadedId);
           fileUrl = urlObj.href || urlObj.toString();
         } catch (e) {
@@ -285,27 +256,25 @@ document.addEventListener('DOMContentLoaded', () => {
           fileUrl = uploadedId;
         }
 
-        // 5. Save to Firestore
         const userEmail = localStorage.getItem('nextcap_user_email') || 'admin_unknown';
 
         const scholarshipData = {
           created_by: userEmail,
           deadline: deadline,
-          image_id: fileUrl, // Storing the full URL as requested
+          image_id: fileUrl,
           title: title,
           from: from,
           description: description,
           amount_of_participants: slots,
           tags: tags,
-          requirements: requirements // Matches "requirements: {}" request (interpreted as list)
+          requirements: requirements
         };
 
         console.log('[indexUpload] Saving to Firestore:', scholarshipData);
         const docId = await createScholarship(scholarshipData);
 
         alert('Scholarship Posted Successfully! ID: ' + docId);
-        // Clean up?
-        // window.location.reload(); 
+
 
       } catch (err) {
         console.error('Post failed:', err);

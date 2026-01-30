@@ -1,34 +1,27 @@
 let currentCard = 'email';
 let userEmail = '';
 let lastOTP = '';
-// Match this to --anim-duration in CSS (milliseconds)
 const ANIM_DURATION = 420;
 
-// Card navigation
 function showCard(cardName, direction = 'right') {
     const currentCardEl = document.getElementById(`${currentCard}-card`);
     const nextCardEl = document.getElementById(`${cardName}-card`);
 
     if (!currentCardEl || !nextCardEl) return;
 
-    // Ensure the next card is visible beneath/above as needed
-    // Make both cards visible so animations can overlap smoothly
+
     nextCardEl.classList.add('active');
 
-    // Set z-index so current card is on top during its exit animation
     currentCardEl.style.zIndex = 3;
     nextCardEl.style.zIndex = 2;
 
-    // Start both animations: current slides out, next slides in
     currentCardEl.classList.add(`slide-out-${direction}`);
     nextCardEl.classList.add(`slide-in-${direction === 'right' ? 'left' : 'right'}`);
 
-    // After the animation finishes, clean up classes and z-indexes
     setTimeout(() => {
         currentCardEl.classList.remove('active', `slide-out-${direction}`);
         nextCardEl.classList.remove(`slide-in-${direction === 'right' ? 'left' : 'right'}`);
 
-        // reset inline z-index styles to let CSS stacking return to normal
         currentCardEl.style.zIndex = '';
         nextCardEl.style.zIndex = '';
 
@@ -36,12 +29,10 @@ function showCard(cardName, direction = 'right') {
     }, ANIM_DURATION + 20);
 }
 
-// Generate random 6-digit OTP
 function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Send OTP via EmailJS
 async function sendOTPToEmail(email) {
     lastOTP = generateOTP();
 
@@ -65,36 +56,28 @@ async function sendOTPToEmail(email) {
     }
 }
 
-// Verify OTP (simple in-memory check)
 async function verifyOTPCode(email, otpCode) {
     return otpCode === lastOTP;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Initialize EmailJS
 
-    // Email card elements
     const emailInput = document.getElementById('email-input');
     const emailContinueBtn = document.getElementById('email-continue-btn');
     const emailError = document.getElementById('email-error');
 
-    // OTP card elements
     const otpInput = document.getElementById('otp-input');
     const otpContinueBtn = document.getElementById('otp-continue-btn');
     const otpError = document.getElementById('otp-error');
     const otpEmailDisplay = document.getElementById('otp-email-display');
     const resendLink = document.getElementById('resend-link');
 
-    // Password card elements
     const passwordInput = document.getElementById('password-input');
     const confirmPasswordInput = document.getElementById('confirm-password-input');
     const passwordContinueBtn = document.getElementById('password-continue-btn');
     const passwordError = document.getElementById('password-error');
     const confirmPasswordError = document.getElementById('confirm-password-error');
 
-    // ================================
-    // EMAIL CARD HANDLER
-    // ================================
     emailContinueBtn.addEventListener('click', async function () {
         const email = emailInput.value.trim();
 
@@ -151,10 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
     emailInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') emailContinueBtn.click();
     });
-
-    // ================================
-    // OTP CARD HANDLER
-    // ================================
     otpContinueBtn.addEventListener('click', async function () {
         const otpCode = otpInput.value.trim();
 
@@ -255,19 +234,16 @@ document.addEventListener('DOMContentLoaded', function () {
         passwordContinueBtn.textContent = 'Creating Account...';
 
         try {
-            // Save user info in Firestore USERS collection (no Auth)
             const { success, message } = await saveUserToFirestore(userEmail, password);
 
             if (success) {
 
-                // persist the signed-up user's email so the Information page can identify the account
                 try {
                     localStorage.setItem('nextcap_user_email', userEmail);
                 } catch (e) {
                     console.warn('Could not persist user email to localStorage', e);
                 }
 
-                // If the page includes a user type selector with id 'user-type', save it to Firestore
                 try {
                     const typeEl = document.getElementById('user-type');
                     if (typeEl && typeof setUserType === 'function') {
@@ -291,9 +267,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ================================
-    // BACK BUTTONS
-    // ================================
     document.getElementById('otp-back-btn').addEventListener('click', function () {
         showCard('email', 'left');
         otpInput.value = '';

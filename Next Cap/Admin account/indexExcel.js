@@ -1,7 +1,6 @@
 import initAdminPage from './admin.js';
 initAdminPage();
 
-// Populate the table rows instead of document.write
 document.addEventListener('DOMContentLoaded', () => {
   const table = document.querySelector('.table-wrapper table');
   if (!table) return;

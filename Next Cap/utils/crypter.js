@@ -1,10 +1,7 @@
-// crypto-utils.js
-// Simple AES encryption/decryption for passwords
-// WARNING: For production, consider proper security practices (hashing + salt, e.g., bcrypt)
 
-const SECRET_KEY = "NextCapSecretKey123"; // Keep this secret, do NOT commit
 
-// Encrypt a string
+const SECRET_KEY = "NextCapSecretKey123";
+
 export function encrypt(text) {
     const enc = new TextEncoder();
     const encoded = enc.encode(text);

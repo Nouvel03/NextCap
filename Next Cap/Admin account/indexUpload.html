@@ -8,15 +8,13 @@
     <link rel="icon" href="../favicon_io/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./indexUpload.css">
     <script>console.log('inline: indexUpload.html loaded');</script>
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-    <!-- Secrets Config -->
     <script src="../utils/secrets.js"></script>
-    <!-- Appwrite SDK -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     <script type="module" src="./indexUpload.js"></script>
+    <script src="../Dashboard all/logout.js"></script>
 </head>
 
 <body>
@@ -35,20 +33,26 @@
     <div class="container">
         <div class="sidebar">
             <div class="sidebar-header">Admin Menu</div>
-            <!-- Dashboard removed -->
+
             <a href="indexAdmin.html" class="menu-item">
                 <img src="images/not-active.svg" alt="" class="menu-icon">
                 Manage Scholarships
             </a>
-            <a href="indexUpload.html" class="menu-item">
-                <img src="images/not-active.svg" alt="" class="menu-icon">
+
+            <a href="indexUpload.html" class="menu-item active">
+                <img src="images/active.svg" alt="" class="menu-icon">
                 Create Scholarships
             </a>
-            <a href="indexExcel.html" class="menu-item">
+
+            <a href="indexManageForums.html" class="menu-item">
                 <img src="images/not-active.svg" alt="" class="menu-icon">
-                Applications Overview
+                Manage Forums
             </a>
-            <!-- Profile Settings removed -->
+
+            <a href="#" class="menu-item" onclick="logout()">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Log out
+            </a>
         </div>
 
         <div class="main-content">

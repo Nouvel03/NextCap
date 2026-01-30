@@ -1,13 +1,18 @@
-/* forum.js - Complete Logic with Dynamic Tags */
+/* forum.js - Complete Logic with Profanity Filter */
 import {
     createForumPost,
     subscribeToForumPosts,
     getForumPost,
     createForumReply,
-    subscribeToForumReplies
+    subscribeToForumReplies,
+    deleteForumPost,
+    deleteForumReply,
+    getUserProfile
 } from '../FirebaseUtils/Firebase_CRUD.js';
 
-// DOM Elements
+import { containsProfanity } from '../utils/text_filter.js';
+
+
 const postsContainer = document.getElementById('forum-posts-container');
 const detailContainer = document.getElementById('forum-post-detail-container');
 const headerRow = document.querySelector('.forum-header-row');
@@ -16,29 +21,32 @@ const submitBtn = document.getElementById('submitBtn');
 const titleInput = document.querySelector('.forum-input');
 const contentInput = document.querySelector('.forum-textarea');
 
-// Tag Elements
+
 const tagInput = document.getElementById('tag-input');
 const addTagBtn = document.getElementById('add-tag-btn');
 const addedTagsContainer = document.getElementById('added-tags-container');
 
-// Modal Elements
+
 const modal = document.getElementById('createPostModal');
 const openBtn = document.getElementById('openCreateModal');
 const closeBtn = document.getElementById('closeModal');
 const cancelBtn = document.getElementById('cancelBtn');
 
-// State
+
 let unsubscribeReplies = null;
 let currentPostId = null;
 let unsubscribePosts = null;
 let postTags = []; // Dynamic Tags
 
-// === 1. TAG LOGIC ===
+
 function addTag() {
     if (!tagInput) return;
     const val = tagInput.value.trim();
-    // Max 5 tags, unique, not empty
     if (val && !postTags.includes(val) && postTags.length < 5) {
+        if (containsProfanity(val)) {
+            alert("Please use respectful language in tags.");
+            return;
+        }
         postTags.push(val);
         renderTagsInputUI();
         tagInput.value = '';
@@ -63,10 +71,9 @@ function renderTagsInputUI() {
     `).join('');
 }
 
-// Expose removal to global scope for onclick
 window.removeTagIdx = removeTag;
 
-// === 2. CREATE POST ===
+
 async function handleCreatePost() {
     const userEmail = localStorage.getItem('nextcap_user_email');
     if (!userEmail) {
@@ -76,12 +83,17 @@ async function handleCreatePost() {
 
     const title = titleInput.value.trim();
     const content = contentInput.value.trim();
-
-    // Default tag if none
     const finalTags = postTags.length > 0 ? postTags : ['General'];
+
+    clearError('post-error');
 
     if (!title || !content) {
         alert('Please fill in both title and content.');
+        return;
+    }
+
+    if (containsProfanity(title) || containsProfanity(content)) {
+        showError('post-error', 'Please use respectful language in our chat.', contentInput.parentNode);
         return;
     }
 
@@ -96,7 +108,6 @@ async function handleCreatePost() {
             tags: finalTags
         });
 
-        // Reset Form
         titleInput.value = '';
         contentInput.value = '';
         postTags = [];
@@ -114,7 +125,7 @@ async function handleCreatePost() {
     }
 }
 
-// === 3. LOAD POSTS (List View) ===
+
 function loadPosts() {
     if (postsContainer) postsContainer.style.display = 'block';
     if (detailContainer) detailContainer.style.display = 'none';
@@ -173,7 +184,7 @@ function loadPosts() {
     });
 }
 
-// === 4. VIEW POST (Detail View) ===
+
 window.viewPost = async function (postId) {
     currentPostId = postId;
 
@@ -225,7 +236,7 @@ function renderPostDetail(post) {
             </button>
         </div>
         
-        <!-- Main Post Card -->
+
         <div class="forum-detail-card">
              <div class="topic-header" style="margin-bottom: 20px; align-items: center;">
                 <div class="topic-avatar" style="width:48px; height:48px; font-size:18px; background-color: ${avatarColor}; color: white;">${initials}</div>
@@ -242,7 +253,7 @@ function renderPostDetail(post) {
              <div style="font-size: 15px; color: #4a5568; line-height: 1.7; white-space: pre-wrap;">${escapeHtml(post.content)}</div>
         </div>
 
-        <!-- Replies Section -->
+
         <div style="display:flex; justify-content:space-between; align-items:center; margin: 30px 0 20px;">
             <h3 style="color:#2d3748; font-size:18px; font-weight:700;">Replies <span id="reply-count-badge" style="font-size:14px; font-weight:normal; color:#718096; margin-left:8px;">(0)</span></h3>
         </div>
@@ -251,10 +262,11 @@ function renderPostDetail(post) {
             <div style="color:#a0aec0; padding:10px;">Loading replies...</div>
         </div>
 
-        <!-- Reply Input Area -->
+
         <div style="background: white; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
             <h4 style="margin-bottom:15px; font-size:15px; color:#2d3748; font-weight:600;">Post a Reply</h4>
-            <textarea id="reply-input" class="forum-textarea" placeholder="What are your thoughts?" style="min-height:100px; margin-bottom:15px;"></textarea>
+            <textarea id="reply-input" class="forum-textarea" placeholder="What are your thoughts?" style="min-height:100px; margin-bottom:15px;" oninput="window.checkReplyProfanity(this)"></textarea>
+            <div id="reply-error-container"></div>
             <div style="display:flex; justify-content:flex-end;">
                 <button onclick="window.submitReply()" id="sendReplyBtn" class="btn-submit">Post Reply</button>
             </div>
@@ -265,7 +277,6 @@ function renderPostDetail(post) {
     detailContainer.innerHTML = html;
 }
 
-// ... Re-include loadReplies, submitReply, utils ...
 function loadReplies(postId) {
     const listEl = document.getElementById('replies-list');
     const countBadge = document.getElementById('reply-count-badge');
@@ -314,6 +325,13 @@ window.submitReply = async function () {
     if (!localStorage.getItem('nextcap_user_email')) return alert('Please login to reply');
     if (!text) return alert('Reply cannot be empty');
 
+    clearError('reply-error');
+
+    if (containsProfanity(text)) {
+        showError('reply-error', 'Please be respectful towards the community.', document.getElementById('reply-error-container') || input.parentNode);
+        return;
+    }
+
     btn.disabled = true; btn.textContent = 'Posting...';
     try {
         await createForumReply(currentPostId, { content: text, author: localStorage.getItem('nextcap_user_email') });
@@ -322,7 +340,38 @@ window.submitReply = async function () {
     finally { btn.disabled = false; btn.textContent = 'Post Reply'; }
 }
 
-// Utils
+window.checkReplyProfanity = function (input) {
+    const text = input.value;
+    const errContainer = document.getElementById('reply-error-container');
+    if (containsProfanity(text)) {
+        showError('reply-error', 'Please be respectful towards the community.', errContainer || input.parentNode);
+    } else {
+        clearError('reply-error');
+    }
+}
+
+
+function showError(id, msg, parent) {
+    let el = document.getElementById(id);
+    if (!el) {
+        el = document.createElement('div');
+        el.id = id;
+        el.style.color = '#e53e3e';
+        el.style.fontSize = '12px';
+        el.style.fontWeight = '600';
+        el.style.marginTop = '8px';
+        el.style.marginBottom = '8px';
+        parent.appendChild(el);
+    }
+    el.textContent = msg;
+}
+
+function clearError(id) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '';
+}
+
+
 function getInitials(n) { if (!n) return '?'; const p = n.split('@')[0]; const pl = p.split(/[^a-zA-Z0-9]/).filter(x => x); if (pl.length >= 2) return (pl[0][0] + pl[1][0]).toUpperCase(); return p.substring(0, 2).toUpperCase(); }
 function getAvatarColor(s) { const c = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#319795', '#3182ce', '#805ad5', '#d53f8c']; let h = 0; for (let i = 0; i < s.length; i++) h = s.charCodeAt(i) + ((h << 5) - h); return c[Math.abs(h) % c.length]; }
 function getTimeAgo(d) { if (!d) return "just now"; const s = Math.floor((new Date() - d) / 1000); if (s < 60) return "just now"; let i = Math.floor(s / 31536000); if (i > 1) return i + "y"; i = Math.floor(s / 2592000); if (i > 1) return i + "m"; i = Math.floor(s / 86400); if (i > 1) return i + "d"; i = Math.floor(s / 3600); if (i > 1) return i + "h"; i = Math.floor(s / 60); if (i > 1) return i + "m"; return s + "s"; }
@@ -333,8 +382,17 @@ function closeModal() { if (modal) modal.style.display = 'none'; }
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPosts();
+
     const e = localStorage.getItem('nextcap_user_email');
-    if (e && document.getElementById('welcome-message')) document.getElementById('welcome-message').textContent = 'Welcome, ' + e.split('@')[0];
+    if (e) {
+        getUserProfile(e).then(data => {
+            const firstName = (data && data.account_information && data.account_information.firstName)
+                || (data && data.firstName)
+                || "Scholar";
+            const name = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+            if (document.getElementById('welcome-message')) document.getElementById('welcome-message').textContent = 'Welcome, ' + name;
+        });
+    }
 
     if (submitBtn) submitBtn.addEventListener('click', handleCreatePost);
     if (openBtn) openBtn.addEventListener('click', openModal);

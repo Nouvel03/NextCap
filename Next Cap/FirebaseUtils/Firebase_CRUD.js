@@ -1,10 +1,10 @@
 
 // Firebase_CRUD.js
-// Handles Firestore operations for Scholarships & Forum
+
 
 const db = typeof firebase !== 'undefined' ? firebase.firestore() : null;
 
-// --- SCHOLARSHIPS ---
+
 
 export async function createScholarship(data) {
     if (!db) throw new Error("Firebase Firestore is not initialized.");
@@ -38,7 +38,7 @@ function generateSearchKeywords(title) {
     return title.toLowerCase().split(/\s+/).filter(w => w.length > 2);
 }
 
-// --- FORUM ---
+
 
 export async function createForumPost(data) {
     if (!db) throw new Error("Firebase Firestore is not initialized.");
@@ -71,7 +71,7 @@ export function subscribeToForumPosts(onNext, onError) {
         .onSnapshot(onNext, onError);
 }
 
-// Fetch single post details
+
 export async function getForumPost(postId) {
     if (!db) throw new Error("Firebase not initialized");
     try {
@@ -86,7 +86,7 @@ export async function getForumPost(postId) {
     }
 }
 
-// Fetch replies sub-collection
+
 export function subscribeToForumReplies(postId, onNext, onError) {
     if (!db) {
         if (onError) onError(new Error("Firebase not initialized"));
@@ -97,7 +97,7 @@ export function subscribeToForumReplies(postId, onNext, onError) {
         .onSnapshot(onNext, onError);
 }
 
-// Create Reply and Increment Count
+
 export async function createForumReply(postId, data) {
     if (!db) throw new Error("Firebase not initialized");
 
@@ -106,11 +106,9 @@ export async function createForumReply(postId, data) {
 
     try {
         await db.runTransaction(async (transaction) => {
-            // Check if post exists
             const postDoc = await transaction.get(postRef);
             if (!postDoc.exists) throw new Error("Post does not exist!");
 
-            // Add Reply
             const newReplyRef = repliesRef.doc();
             transaction.set(newReplyRef, {
                 content: data.content,
@@ -118,7 +116,6 @@ export async function createForumReply(postId, data) {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            // Increment Count
             const newCount = (postDoc.data().replyCount || 0) + 1;
             transaction.update(postRef, { replyCount: newCount });
         });
@@ -126,5 +123,53 @@ export async function createForumReply(postId, data) {
     } catch (e) {
         console.error("Error creating reply:", e);
         throw e;
+    }
+}
+
+
+export async function deleteForumPost(postId) {
+    if (!db) throw new Error("Firebase not initialized");
+    try {
+        await db.collection('FORUM').doc(postId).delete();
+        return true;
+    } catch (e) {
+        console.error("Error deleting post:", e);
+        throw e;
+    }
+}
+
+
+export async function deleteForumReply(postId, replyId) {
+    if (!db) throw new Error("Firebase not initialized");
+    const postRef = db.collection('FORUM').doc(postId);
+    const replyRef = postRef.collection('REPLIES').doc(replyId);
+
+    try {
+        await db.runTransaction(async (transaction) => {
+            const postDoc = await transaction.get(postRef);
+            if (postDoc.exists) {
+                const newCount = Math.max(0, (postDoc.data().replyCount || 0) - 1);
+                transaction.update(postRef, { replyCount: newCount });
+            }
+            transaction.delete(replyRef);
+        });
+        return true;
+    } catch (e) {
+        console.error("Error deleting reply:", e);
+        throw e;
+    }
+}
+
+export async function getUserProfile(email) {
+    if (!db) throw new Error("Firebase not initialized");
+    try {
+        const snapshot = await db.collection('USERS').where('email', '==', email).limit(1).get();
+        if (!snapshot.empty) {
+            return snapshot.docs[0].data();
+        }
+        return null;
+    } catch (e) {
+        console.error("Error fetching user profile:", e);
+        return null;
     }
 }

@@ -111,8 +111,8 @@ body {
 }
 
 .menu-item.active {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: #1e40af;
+    color: white;
     border-left-color: #1e40af;
     border-left-width: 4px;
     font-weight: 600;
@@ -278,7 +278,7 @@ textarea.form-input {
 }
 
 .tag-pill {
-    background-color: #0d9488;
+    background-color: #1e40af;
     color: white;
     padding: 6px 14px;
     border-radius: 999px;

@@ -87,7 +87,7 @@ function createAdminCard(id, s) {
             const label = typeof t === 'string' ? t : t.name;
             // coloring logic (simple hash or default)
             // Added display:inline-flex, flex-wrap, text-align:center logic
-            return `<span class="tag" style="background-color:#38b2ac; color:white; display:inline-flex; align-items:center; justify-content:center; text-align:center; min-height:24px; white-space:normal; line-height:1.2; word-break: break-word;">${label}</span>`;
+            return `<span class="tag" style="background-color:#1e40af; color:white; display:inline-flex; align-items:center; justify-content:center; text-align:center; min-height:24px; white-space:normal; line-height:1.2; word-break: break-word;">${label}</span>`;
         }).join('');
 
     card.innerHTML = `

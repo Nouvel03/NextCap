@@ -17,7 +17,7 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     height: 70px;
 }
 
@@ -73,7 +73,7 @@ body {
     background-color: white;
     border-radius: 8px;
     padding: 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     height: calc(100vh - 120px);
 }
 
@@ -101,8 +101,8 @@ body {
 }
 
 .menu-item.active {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: #1e40af;
+    color: white;
     border-left-color: #1e40af;
 }
 
@@ -171,13 +171,29 @@ td {
     border: 1px solid #d1d5db;
 }
 
-.status-legend { font-weight: 600; }
-.status-submitted { color: #fbbf24; }
-.status-review { color: #3b82f6; }
-.status-approved { color: #10b981; }
-.status-rejected { color: #ef4444; }
+.status-legend {
+    font-weight: 600;
+}
 
-.selected-cell { border: 2px solid #059669 !important; }
+.status-submitted {
+    color: #fbbf24;
+}
+
+.status-review {
+    color: #3b82f6;
+}
+
+.status-approved {
+    color: #10b981;
+}
+
+.status-rejected {
+    color: #ef4444;
+}
+
+.selected-cell {
+    border: 2px solid #059669 !important;
+}
 
 .action-footer {
     padding: 20px;
@@ -188,7 +204,25 @@ td {
     border-top: 1px solid #f3f4f6;
 }
 
-.btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; border: none; color: white; }
-.btn-view { background-color: #1e40af; }
-.btn-status { background-color: #0d9488; }
-.btn-message { background-color: #fbbf24; color: #451a03; }
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    color: white;
+}
+
+.btn-view {
+    background-color: #1e40af;
+}
+
+.btn-status {
+    background-color: #0d9488;
+}
+
+.btn-message {
+    background-color: #fbbf24;
+    color: #451a03;
+}

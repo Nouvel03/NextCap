@@ -3,9 +3,7 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 
-// =================CONFIG=================
-// 1. Get your Service Account Key from Firebase Console -> Project Settings -> Service Accounts
-//    Save it as 'serviceAccountKey.json' in this folder.
+
 const SERVICE_ACCOUNT_PATH = path.join(__dirname, 'nextcap-325c5-firebase-adminsdk-fbsvc-5d41b98725.json');
 
 const SECRETS = require('../utils/secrets.js');
@@ -15,9 +13,7 @@ const EMAILJS_SERVICE_ID = SECRETS.EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = SECRETS.EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = SECRETS.EMAILJS_PUBLIC_KEY;
 const EMAILJS_PRIVATE_KEY = SECRETS.EMAILJS_PRIVATE_KEY;
-// ========================================
 
-// Reset color codes for console
 const colors = {
     reset: "\x1b[0m",
     red: "\x1b[31m",
@@ -29,7 +25,6 @@ const colors = {
 async function main() {
     console.log(`${colors.cyan}--- NextCap Reminder Bot Started ---${colors.reset}`);
 
-    // 1. Initialize Firebase Admin
     if (!fs.existsSync(SERVICE_ACCOUNT_PATH)) {
         console.error(`${colors.red}[ERROR] Service Account Key not found at ${SERVICE_ACCOUNT_PATH}${colors.reset}`);
         console.log("Please download it from Firebase Console -> Project Settings -> Service Accounts.");
@@ -47,7 +42,6 @@ async function main() {
     const db = admin.firestore();
 
     try {
-        // 2. Find Expiring Scholarships
         console.log("Checking active scholarships...");
         const now = new Date();
         const threeDaysFromNow = new Date();
@@ -64,7 +58,6 @@ async function main() {
             if (!data.deadline) return;
 
             const deadlineDate = new Date(data.deadline);
-            // Check if deadline is in the future AND less than 3 days away
             if (deadlineDate > now && deadlineDate <= threeDaysFromNow) {
                 expiringScholarships[doc.id] = {
                     title: data.title,
@@ -80,7 +73,6 @@ async function main() {
             process.exit(0);
         }
 
-        // 3. Check Users
         const usersSnap = await db.collection('USERS').get();
         console.log(`Checking users' progress... (Total users found: ${usersSnap.size})`);
         let emailsSent = 0;
@@ -90,24 +82,18 @@ async function main() {
             const email = userData.email;
             const applications = userData.applied_scholarships || {};
 
-            // console.log(`Checking user: ${email} - Applications: ${Object.keys(applications).join(', ')}`);
 
             for (const [sId, appData] of Object.entries(applications)) {
 
-                // Debug: Check if this user app matches any expiring ones
                 if (expiringScholarships[sId]) {
                     console.log(`  > Match found for user ${email} on "${expiringScholarships[sId].title}"`);
                     console.log(`    Status: ${appData.status}`);
 
-                    // CHECK PROGRESS:
-                    // Condition: Status is NOT 'Completed' AND NOT 'Rejected'
-                    // You can customize this (e.g., check raw requirements count)
                     const isIncomplete = appData.status !== 'Completed' && appData.status !== 'Rejected' && appData.status !== 'Approved';
 
                     if (isIncomplete) {
                         console.log(`    -> IS INCOMPLETE. Sending email...`);
 
-                        // 4. Send Email
                         await sendEmailReminder(email, userData.firstName || 'Student', expiringScholarships[sId]);
                         emailsSent++;
                     } else {
@@ -129,10 +115,10 @@ async function sendEmailReminder(userEmail, userName, scholarshipInfo) {
         service_id: EMAILJS_SERVICE_ID,
         template_id: EMAILJS_TEMPLATE_ID,
         user_id: EMAILJS_PUBLIC_KEY,
-        accessToken: EMAILJS_PRIVATE_KEY, // If using private key auth
+        accessToken: EMAILJS_PRIVATE_KEY,
         template_params: {
             to_email: userEmail,
-            email: userEmail, // Adding this as fallback if template uses {{email}}
+            email: userEmail,
             to_name: userName,
             scholarship_name: scholarshipInfo.title,
             date_time_due: scholarshipInfo.deadline

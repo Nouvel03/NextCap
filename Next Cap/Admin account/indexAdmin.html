@@ -31,25 +31,25 @@
         <div class="sidebar">
             <div class="sidebar-header">Admin Menu</div>
 
-            <!-- Dashboard removed as requested -->
-
             <a href="indexAdmin.html" class="menu-item active">
                 <img src="images/active.svg" alt="" class="menu-icon">
                 Manage Scholarships
             </a>
 
-            <!-- Nested item under Manage Scholarships -->
             <a href="indexUpload.html" class="menu-item">
                 <img src="images/not-active.svg" alt="" class="menu-icon">
                 Create Scholarships
             </a>
 
-            <a href="indexExcel.html" class="menu-item">
+            <a href="indexManageForums.html" class="menu-item">
                 <img src="images/not-active.svg" alt="" class="menu-icon">
-                Applications Overview
+                Manage Forums
             </a>
 
-            <!-- Profile Settings removed -->
+            <a href="#" class="menu-item" onclick="logout()">
+                <img src="images/not-active.svg" alt="" class="menu-icon">
+                Log out
+            </a>
         </div>
 
         <div class="main-content">
@@ -109,5 +109,6 @@
     </div>
 </body>
 <script type="module" src="./indexAdmin.js"></script>
+<script src="../Dashboard all/logout.js"></script>
 
 </html>

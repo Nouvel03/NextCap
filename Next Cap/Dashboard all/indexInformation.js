@@ -16,10 +16,7 @@ if (!firebase.apps.length) {
 }
 const db = firebase.firestore();
 
-// Fields map for easier processing
-// Key: HTML Input ID, Value: Firestore Field path (e.g., 'personal_information.first_name')
-// Fields map: Input ID -> Firestore Field path
-// Based on information_script.js, all fields are saved directly under 'account_information'
+
 const fieldsMap = {
     // Personal
     'firstName': 'account_information.firstName',
@@ -31,14 +28,12 @@ const fieldsMap = {
     'address': 'account_information.address',
     'contact': 'account_information.contact',
 
-    // Education
     'school': 'account_information.school',
     'schoolAddress': 'account_information.schoolAddress',
     'educationLevel': 'account_information.educationLevel',
     'yearLevel': 'account_information.yearLevel',
     'course': 'account_information.course',
 
-    // Academic & Financial
     'gwa': 'account_information.gwa',
     'financialStatus': 'account_information.financialStatus',
     'estimatedSalary': 'account_information.estimatedSalary'
@@ -61,23 +56,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const doc = snapshot.docs[0];
         const userData = doc.data();
-        const userId = doc.id; // Save needed for update
+        const userId = doc.id;
 
         console.log("User Data Loaded:", userData);
 
-        // Update Welcome Header
         const welcomeSpan = document.getElementById('welcome-message');
         if (welcomeSpan) {
             const fName = (userData.account_information && userData.account_information.firstName) || userData.firstName || "Scholar";
             welcomeSpan.textContent = `Welcome, ${fName.charAt(0).toUpperCase() + fName.slice(1)}`;
         }
 
-        // Populate fields
         for (const [inputId, firestorePath] of Object.entries(fieldsMap)) {
             const input = document.getElementById(inputId);
             if (!input) continue;
 
-            // Resolve nested property (e.g. personal_information.first_name)
             const parts = firestorePath.split('.');
             let value = userData;
             for (const part of parts) {
@@ -89,7 +81,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            // Handle date field specifically if needed (Firestore timestamp to YYYY-MM-DD)
             if (inputId === 'birthday' && value && typeof value === 'object' && value.seconds) {
                 // If it's a Firestore timestamp
                 const date = new Date(value.seconds * 1000);
@@ -100,22 +91,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             input.value = value;
         }
 
-        // Handle Interests Loading
         const interestsContainer = document.getElementById('interests-container');
         if (interestsContainer) {
-            // Check if interests exist in root or account_information
-            // Check if interests exist in account_information (primary) or root (fallback)
+
             let interests = (userData.account_information && userData.account_information.interests) || userData.interests || [];
             if (Array.isArray(interests)) {
                 interests.forEach(i => addInterestPill(i, interestsContainer));
             }
         }
 
-        // Attach Update Listener
         const updateBtn = document.getElementById('update-btn');
         updateBtn.addEventListener('click', () => updateInformation(userId));
 
-        // Attach Interest Input Listener
         const interestInput = document.getElementById('interests-input');
         if (interestInput && interestsContainer) {
             interestInput.addEventListener('keydown', (e) => {
@@ -135,7 +122,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function addInterestPill(text, container) {
-    // Check duplicates
     const exists = Array.from(container.children).some(c => c.textContent.replace('✕', '').trim().toLowerCase() === text.toLowerCase());
     if (exists) return;
 
@@ -154,39 +140,28 @@ async function updateInformation(userId) {
     try {
         const updates = {};
 
-        // Gather data from inputs
         for (const [inputId, firestorePath] of Object.entries(fieldsMap)) {
             const input = document.getElementById(inputId);
             if (!input) continue;
 
             let value = input.value;
             if (inputId === 'birthday' && value) {
-                // Keep as string or convert to Date? Firestore usually likes Timestamps for dates, but strings are safer for simple forms if format is YYYY-MM-DD.
-                // Existing code likely expects strings or timestamps. Let's stick to string if that's what was there, OR standard ISO string.
-                // For now, save the string value from the date input.
+
             }
 
-            // Construct dot notation for update (e.g. "personal_information.first_name": "Value")
             updates[firestorePath] = value;
         }
 
-        // Collect Interests
         const interestsContainer = document.getElementById('interests-container');
         const interests = interestsContainer
             ? Array.from(interestsContainer.children).map(c => c.textContent.replace('✕', '').trim())
             : [];
 
-        // Save to 'account_information.interests' to match onboarding structure
         updates['account_information.interests'] = interests;
-
-        // Also update root 'interests' for backward compatibility if needed, or just stick to one.
-        // Let's stick to the one inside account_information as per the fieldsMap convention.
-
         console.log("Saving updates:", updates);
 
         await db.collection('USERS').doc(userId).update(updates);
 
-        // Success
         updateBtn.textContent = 'Updated Successfully ✓';
         updateBtn.style.backgroundColor = '#48bb78'; // Green success
 

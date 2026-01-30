@@ -1,7 +1,7 @@
 // scholarship_array.js - Modified to fetch from Firestore
 // Note: This script assumes firebase-app-compat and firebase-firestore-compat are loaded
 
-// Firebase Configuration (Same as Login/Admin)
+
 const firebaseConfig = {
   apiKey: "AIzaSyDVlX0vRgMqDNyzPPeebJxv5AFF-ZBkqbI",
   authDomain: "nextcap-325c5.firebaseapp.com",
@@ -12,25 +12,25 @@ const firebaseConfig = {
   measurementId: "G-C3592LXZQC"
 };
 
-// Initialize Firebase if not already initialized
+
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.firestore();
 
-// Helper to generate tag HTML
+
 function createTagsHTML(tags) {
   if (!tags || !Array.isArray(tags)) return '';
   // Default teal color for dynamic tags unless specified
   return tags.map(t => {
     const name = typeof t === 'string' ? t : t.name;
-    const color = (typeof t === 'object' && t.color) ? t.color : "#38b2ac";
+    const color = (typeof t === 'object' && t.color) ? t.color : "#1e40af";
     // Inline styles for pill look (matched to user preference)
     return `<span class="tag" style="background-color:${color}; display:inline-block; padding:4px 12px; border-radius:20px; color:white; font-size:12px; font-weight:600; margin-right:5px; margin-bottom:5px;">${name}</span>`;
   }).join('');
 }
 
-// Single Card HTML Generator
+
 function createCardHTML(s) {
   // Format timestamp if available
   let dateStr = "Recently";
@@ -66,9 +66,6 @@ function createCardHTML(s) {
   
           <div class="post-right">
             <h3>${s.title}</h3> 
-            <!-- Note: User said "title above description". The design usually has header (School Name) and body title (Scholarship Title). 
-                 We are using the 'title' field for both or mapping appropriately. 
-                 Let's assume the mapped 'title' goes here. -->
             
             <p>${s.description}</p>
             <div class="info-label">Tags</div>
@@ -76,7 +73,6 @@ function createCardHTML(s) {
             ${(() => {
       const isApplied = currentUserData && currentUserData.applied_scholarships && currentUserData.applied_scholarships[s.id];
       const reqs = Array.isArray(s.requirements) ? s.requirements : [];
-      // Escape quotes for HTML attribute
       const reqJson = JSON.stringify(reqs).replace(/"/g, '&quot;');
 
       if (isApplied) {
@@ -91,7 +87,6 @@ function createCardHTML(s) {
     `;
 }
 
-// Store current user data globally to avoid repeated fetches
 let currentUserData = null;
 let currentUserDocId = null;
 
@@ -113,7 +108,6 @@ async function fetchCurrentUserProfile(email) {
   }
 }
 
-// Logic: Apply for Scholarship
 async function applyForScholarship(scholarshipId, requirements, triggerBtn) {
   const email = localStorage.getItem('nextcap_user_email');
   if (!email || !currentUserDocId) {
@@ -132,16 +126,13 @@ async function applyForScholarship(scholarshipId, requirements, triggerBtn) {
   }
 
   try {
-    // 1. Prepare Requirements Map (Sanitize keys for Firestore)
     const reqMap = {};
     const reqList = Array.isArray(requirements) ? requirements : [];
     reqList.forEach(r => {
-      // Firestore keys cannot contain '.', replace with '_'
       const key = typeof r === 'string' ? r.replace(/\./g, '_') : 'req';
       reqMap[key] = false;
     });
 
-    // 2. Prepare Application Data
     const applicationData = {
       status: 'pending',
       applied_at: new Date(),
@@ -149,18 +140,15 @@ async function applyForScholarship(scholarshipId, requirements, triggerBtn) {
       scholarship_id: scholarshipId
     };
 
-    // 3. Update User Document (using Dot Notation for nested map update)
-    // Note: this creates/updates 'applied_scholarships.scholarshipId'
+
     await db.collection('USERS').doc(currentUserDocId).update({
       [`applied_scholarships.${scholarshipId}`]: applicationData
     });
 
-    // 4. Update Scholarship Participant Count
     await db.collection('SCHOLARSHIPS').doc(scholarshipId).update({
       current_participants: firebase.firestore.FieldValue.increment(1)
     });
 
-    // 5. Update Local Cache & UI
     if (!currentUserData.applied_scholarships) currentUserData.applied_scholarships = {};
     currentUserData.applied_scholarships[scholarshipId] = applicationData;
 
@@ -182,7 +170,6 @@ async function applyForScholarship(scholarshipId, requirements, triggerBtn) {
   }
 }
 
-// Logic: Update Requirements Progress
 async function updateApplicationRequirements(scholarshipId) {
   const form = document.getElementById(`req-form-${scholarshipId}`);
   if (!form || !currentUserDocId) return;
@@ -200,21 +187,17 @@ async function updateApplicationRequirements(scholarshipId) {
       updatedReqs[input.name] = input.checked;
     });
 
-    // Update Firestore (Deep update)
     await db.collection('USERS').doc(currentUserDocId).update({
       [`applied_scholarships.${scholarshipId}.requirements`]: updatedReqs
     });
 
-    // Update Local Cache
     if (currentUserData && currentUserData.applied_scholarships && currentUserData.applied_scholarships[scholarshipId]) {
       currentUserData.applied_scholarships[scholarshipId].requirements = updatedReqs;
     }
 
-    // UI Feedback
     btn.textContent = "Saved ✓";
     btn.style.backgroundColor = "#4299e1";
 
-    // Refresh styles (strikethrough)
     inputs.forEach(input => {
       const label = form.querySelector(`label[for="${input.id}"]`);
       if (label) {
@@ -237,7 +220,7 @@ async function updateApplicationRequirements(scholarshipId) {
   }
 }
 
-// Helper: Extract keywords from cached profile
+
 function getUserKeywordsFromCache() {
   if (!currentUserData) return [];
 
@@ -249,7 +232,6 @@ function getUserKeywordsFromCache() {
   if (currentUserData.account_information) {
     Object.values(currentUserData.account_information).forEach(val => addIfString(val));
   }
-  // Add direct fields
   ['type', 'education', 'status', 'income'].forEach(field => addIfString(currentUserData[field]));
 
   // Add interests array
@@ -266,7 +248,7 @@ function getUserKeywordsFromCache() {
   return Array.from(keywords);
 }
 
-// Global View Function
+
 window.viewScholarship = async function (id) {
   const mainContent = document.querySelector('.main-content');
   if (!mainContent) return;
@@ -277,7 +259,6 @@ window.viewScholarship = async function (id) {
     await fetchCurrentUserProfile(email);
   }
 
-  // Show loading
   mainContent.innerHTML = `
         <div class="post-card detail-view">
              <div class="large-placeholder" style="height: 400px; opacity: 0.5;"></div>
@@ -301,7 +282,6 @@ window.viewScholarship = async function (id) {
       currentUserData.applied_scholarships &&
       currentUserData.applied_scholarships[s.id];
 
-    // Format Date
     let dateStr = "Recently";
     let timeStr = "";
     if (s.time_of_creation) {
@@ -310,8 +290,7 @@ window.viewScholarship = async function (id) {
       timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
     }
 
-    // Generate Detailed HTML
-    // Prepare requirements array for onclick (escape quotes)
+
     const reqJson = JSON.stringify(reqArray).replace(/"/g, '&quot;');
 
     const applyBtnState = isApplied
@@ -424,7 +403,6 @@ async function renderFirestoreScholarships() {
   const container = document.getElementById('verified-scholarships');
   if (!container) return;
 
-  // Show loading or clear
   container.innerHTML = '<p style="padding:20px; color:#718096">Loading scholarships...</p>';
 
   try {
@@ -432,7 +410,6 @@ async function renderFirestoreScholarships() {
     if (email) {
       await fetchCurrentUserProfile(email);
     }
-    // Only show active scholarships (client-side filtering to include docs missing 'active' field)
     const snapshot = await db.collection('SCHOLARSHIPS').get();
 
     container.innerHTML = ''; // Clear loading
@@ -442,11 +419,9 @@ async function renderFirestoreScholarships() {
       return;
     }
 
-    // Sort client-side
     const docs = [];
     snapshot.forEach(doc => {
       const d = doc.data();
-      // If active is explicitly false, skip. treating undefined as true.
       if (d.active === false) return;
       docs.push(doc);
     });
@@ -461,14 +436,10 @@ async function renderFirestoreScholarships() {
 
     docs.forEach(doc => {
       const data = doc.data();
-      // Map Firestore data to the expected format for createCardHTML
-      // We ensure we handle the fields we saved: title, description, tags, image_id, etc.
       const scholarship = {
         id: doc.id,
         ...data,
-        // Ensure tags is array
         tags: Array.isArray(data.tags) ? data.tags : [],
-        // Default fallback for badge
         verifiedBadgeColor: "#4299e1"
       };
 
@@ -483,9 +454,8 @@ async function renderFirestoreScholarships() {
   }
 }
 
-// ---- SUGGESTED SCHOLARSHIPS LOGIC ----
 
-// Helper to expand keywords with synonyms (Education levels, etc.)
+
 function expandKeywordsWithSynonyms(keywords) {
   const synonyms = {
     'shs': ['senior high', 'k-12', 'high school'],
@@ -506,7 +476,6 @@ function expandKeywordsWithSynonyms(keywords) {
   return Array.from(expanded);
 }
 
-// ---- SUGGESTED SCHOLARSHIPS LOGIC ----
 
 async function renderSuggestedScholarships() {
 
@@ -522,8 +491,6 @@ async function renderSuggestedScholarships() {
   }
 
   try {
-    // 1. Get User Keywords & Expand
-    // Using new profile fetcher to ensure we have applied_scholarships data too (if needed later)
     await fetchCurrentUserProfile(email);
     let userKeywords = getUserKeywordsFromCache();
     userKeywords = expandKeywordsWithSynonyms(userKeywords);
@@ -535,7 +502,6 @@ async function renderSuggestedScholarships() {
       return;
     }
 
-    // 2. Get All Scholarships
     const snapshot = await db.collection('SCHOLARSHIPS').orderBy('time_of_creation', 'desc').get();
 
     container.innerHTML = '';
@@ -544,13 +510,11 @@ async function renderSuggestedScholarships() {
     snapshot.forEach(doc => {
       const data = doc.data();
 
-      // Collect Scholarship Keywords (Tags, Requirements, Title keywords)
       const sTags = [
         ...(Array.isArray(data.tags) ? data.tags : []),
         ...(Array.isArray(data.requirements) ? data.requirements : [])
       ].filter(k => typeof k === 'string').map(k => k.toLowerCase().trim());
 
-      // 3. Match Logic: STRICT INTERSECTION
       const isMatch = sTags.some(tag => userKeywords.includes(tag));
 
       if (isMatch) {
@@ -577,7 +541,7 @@ async function renderSuggestedScholarships() {
   }
 }
 
-// ---- APPLIED SCHOLARSHIPS LOGIC (Dashboard) ----
+
 async function renderAppliedScholarships() {
   const container = document.getElementById('applied-scholarships-container');
   if (!container) return;
@@ -599,11 +563,9 @@ async function renderAppliedScholarships() {
     const appliedMap = currentUserData.applied_scholarships;
     const appliedIds = Object.keys(appliedMap);
 
-    // Update Stats
     const countSpan = document.getElementById('active-applications-count');
     if (countSpan) countSpan.textContent = appliedIds.length;
 
-    container.innerHTML = ''; // Clear loading
 
     if (appliedIds.length === 0) {
       container.innerHTML = '<p>No active applications.</p>';
@@ -623,14 +585,9 @@ async function renderAppliedScholarships() {
         const statusColor = appData.status === 'approved' ? '#48bb78' :
           appData.status === 'rejected' ? '#f56565' : '#4299e1'; // Pending = Blue
 
-        // Calculate Requirement Progress
         const reqs = appData.requirements || {};
         const totalReqs = Object.keys(reqs).length;
-        // In this schema, values are boolean true/false for completion? 
-        // Or if initialized as false, they are pending. User hasn't "submitted" reqs individually yet in this flow,
-        // but let's assume if he applied, he conceptually "did" something or we track 'true' if verified.
-        // For now, let's just assume we show 0% or 100% or just visualize the count.
-        // Actually, the prompt says "it has 2/3 done". Let's assume the values in the map CAN be true.
+
         const completedReqs = Object.values(reqs).filter(v => v === true).length;
         const progressPercent = totalReqs > 0 ? Math.round((completedReqs / totalReqs) * 100) : 0;
 
@@ -694,7 +651,6 @@ async function renderAppliedScholarships() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Only run on pages that have the container
   if (document.getElementById('verified-scholarships')) {
     renderFirestoreScholarships();
   }
@@ -722,7 +678,6 @@ async function updateWelcomeMessage() {
     || (data && data.firstName)
     || "Scholar";
 
-  // Capitalize first letter just in case
   const name = firstName.charAt(0).toUpperCase() + firstName.slice(1);
   welcomeSpan.textContent = `Welcome, ${name}`;
 }

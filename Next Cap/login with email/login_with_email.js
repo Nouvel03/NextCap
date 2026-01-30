@@ -2,19 +2,15 @@ import { decrypt } from "../utils/crypter.js";
 import { checkEmailExists, updateUserPassword } from "../FirebaseUtils/FirebaseUtils_Login.js"; // Import new helpers
 
 document.addEventListener('DOMContentLoaded', () => {
-  // === GLOBALS & STATE ===
   let currentCard = 'login-card'; // Holds the ID of the current card
   let generatedOTP = null;
   let currentForgotEmail = '';
 
   const ANIM_DURATION = 420; // Match CSS
 
-  // Ensure login card is visible initially
   const initialCard = document.getElementById(currentCard);
   if (initialCard) {
     initialCard.classList.add('active');
-    // Force a slight delay to trigger entry animation if defined (optional)
-    // For now relying on CSS default opacity transition on load
   }
 
   function showCard(nextCardId, direction = 'right') {
@@ -24,84 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!currentEl || !nextEl) return;
     if (currentCard === nextCardId) return;
 
-    // Prepare next card
     nextEl.classList.add('active');
 
-    // Z-Index: Current stays on top during exit
     currentEl.style.zIndex = 10;
     nextEl.style.zIndex = 5;
 
-    // Add animation classes
-    // If direction is 'right' (moving forward): Current slides out to Left? No.
-    // Usually: Forward -> Current slides Out Left, Next slides In Right.
-    // CSS names: slide-out-left, slide-in-right.
 
-    // Let's check CSS names from step 1373:
-    // .slide-out-left: translates X to -110% (Goes Left). opacity 0.
-    // .slide-out-right: translates X to -110% (Wait? Step 1373 keyframes check...)
-
-    // CHECK KEYFRAMES IN STEP 1373:
-    // slideOutRight: to { transform: translateX(-110%) } -> THIS MEMORIZED FROM PREVIOUS?
-    // Wait. slideOutRight usually means sliding OUT TO THE RIGHT (translateX > 100%).
-    // Let's check Step 1373 again carefully.
-
-    /* 
-    @keyframes slideOutRight {
-        to { transform: ... translateX(-110%) ... } // Wait, -110% is LEFT.
-    }
-    */
-    // If slideOutRight moves LEFT, the naming is confusing or I misread.
-    // Let's re-read Step 1373 or 1370 logic.
-    // Step 1370 (Original file):
-    // @keyframes slideOutRight ... to { translateX(-110%) } -> That is Left.
-    // @keyframes slideOutLeft ... to { translateX(110%) } -> That is Right.
-    // That seems INVERTED naming or specific to "Slide out [action] Right [direction of flow?]"
-
-    // Actually, usually "Slide Out Left" means element moves to the left.
-    // "Slide Out Right" means element moves to the right.
-
-    // In Step 1370/1373:
-    // slideOutRight: translateX matches -110%. (Left).
-    // slideOutLeft: translateX matches 110%. (Right).
-
-    // So `slide-out-right` makes it go LEFT.
-    // This is confusing. I will stick to what the CSS *does*.
-
-    // Forward Navigation (Enter new card from Right, Old card leaves to Left):
-    // Old: slide-out-right (Goes Left per CSS).
-    // New: slide-in-right (From Right? Let's check).
-    // slideInRight: from { translateX(-120%) } -> Starts Left?
-    // Wait. slideInRight: from -120% (Left) to 0. It enters FROM Left?
-
-    // Let's look at `slideInLeft` in Step 1373:
-    // from { translateX(120%) } -> Starts Right.
-
-    // Okay, the CSS naming is definitely: "Slide [In/Out] [FROM/TO direction inverted?]".
-    // Or maybe "Slide [Motion Type] [Button Pressed Direction?]".
-
-    // Let's simply test or use the logic from `email-flow.js` calls.
-    // email-flow.js: showCard(cardName, 'right').
-    // Logic: 
-    // currentCardEl.classList.add(`slide-out-${direction}`);
-    // nextCardEl.classList.add(`slide-in-${direction === 'right' ? 'left' : 'right'}`);
-
-    // If direction is 'right':
-    // current: slide-out-right (Goes Left).
-    // next: slide-in-left (Starts Right?).
-    // slideInLeft (Step 1373): from { translateX(120%) } (Right). to { 0 }.
-    // So Next comes IN from Right.
-
-    // Okay, so passing 'right' means "Simulate moving Right/Forward".
-    // Current goes Left (slide-out-right). Next comes from Right (slide-in-left).
-
-    // Confusing naming but consistent usage.
-    // I will USE the code pattern from `email-flow.js`.
 
     if (direction === 'right') {
       currentEl.classList.add('slide-out-right'); // Logic says this goes Left
       nextEl.classList.add('slide-in-left');     // Logic says this comes from Right
     } else {
-      // 'left' (Back)
       currentEl.classList.add('slide-out-left');  // Logic says this goes Right
       nextEl.classList.add('slide-in-right');     // Logic says this comes from Left
     }
@@ -116,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // === EMAIL / OTP LOGIC ===
   function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
@@ -143,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // === LOGIN ELEMENTS ===
   const loginBtn = document.getElementById('login-btn');
   const loginEmailInput = document.getElementById('login-email');
   const loginPassInput = document.getElementById('login-password');
@@ -151,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginPassErr = document.getElementById('login-password-error');
   const forgotLink = document.getElementById('forgot-password-link');
 
-  // === FORGOT PASSWORD ELEMENTS ===
   const forgotEmailInput = document.getElementById('forgot-email');
   const forgotEmailErr = document.getElementById('forgot-email-error');
   const sendOtpBtn = document.getElementById('send-otp-btn');
@@ -163,14 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const otpBackBtn = document.getElementById('otp-back-btn');
   const otpDisplayInfo = document.getElementById('otp-email-display');
 
-  // === RESET PASSWORD ELEMENTS ===
   const newPassInput = document.getElementById('new-password');
   const confirmPassInput = document.getElementById('confirm-password');
   const newPassErr = document.getElementById('new-password-error');
   const confirmPassErr = document.getElementById('confirm-password-error');
   const resetPassBtn = document.getElementById('reset-pass-btn');
 
-  // === DOM HELPERS ===
   function showError(el, msg) {
     if (el) el.textContent = msg;
     const input = el?.previousElementSibling;
@@ -181,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (input) input.style.borderColor = '#ddd';
   }
 
-  // === 1. LOGIN LOGIC ===
   if (loginBtn) {
     loginBtn.addEventListener('click', async () => {
       clearError(loginEmailErr, loginEmailInput);
@@ -210,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
         catch (e) { return showError(loginPassErr, 'Store password error'); }
 
         if (decrypted === password) {
-          // Success
           localStorage.setItem('nextcap_user_email', email);
           const userType = data.type;
 
@@ -231,9 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // === 2. FORGOT PASSWORD FLOW ===
 
-  // Link Click
   if (forgotLink) {
     forgotLink.addEventListener('click', (e) => {
       e.preventDefault();
@@ -243,14 +163,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Back Button (Forgot Email Card)
   if (forgotBackBtn) {
     forgotBackBtn.addEventListener('click', () => {
       showCard('login-card', 'left');
     });
   }
 
-  // Send OTP
   if (sendOtpBtn) {
     sendOtpBtn.addEventListener('click', async () => {
       const email = forgotEmailInput.value.trim();
@@ -263,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
       sendOtpBtn.textContent = 'Checking...';
 
       try {
-        // Check existence
         const exists = await checkEmailExists(email);
         if (!exists) {
           sendOtpBtn.disabled = false;
@@ -271,7 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
           return showError(forgotEmailErr, 'No account found with this email');
         }
 
-        // Send
         sendOtpBtn.textContent = 'Sending OTP...';
         const sent = await sendOTPToEmail(email);
         if (sent) {
@@ -291,14 +207,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Back Button (OTP Card)
   if (otpBackBtn) {
     otpBackBtn.addEventListener('click', () => {
       showCard('forgot-password-card', 'left');
     });
   }
 
-  // Verify OTP
   if (verifyOtpBtn) {
     verifyOtpBtn.addEventListener('click', () => {
       const code = otpInput.value.trim();
@@ -314,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Reset Password
   if (resetPassBtn) {
     resetPassBtn.addEventListener('click', async () => {
       const p1 = newPassInput.value;

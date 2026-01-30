@@ -257,26 +257,17 @@ body {
     font-size: 12px;
     font-weight: 500;
     color: white;
+    background-color: #1e40af;
+    /* Unified Blue */
 }
 
-.tag.shs {
-    background-color: #38b2ac;
-}
-
-.tag.college {
-    background-color: #48bb78;
-}
-
-.tag.working {
-    background-color: #4299e1;
-}
-
-.tag.grade-sensitive {
-    background-color: #ed8936;
-}
-
+/* Override all specific colors to ensure uniformity */
+.tag.shs,
+.tag.college,
+.tag.working,
+.tag.grade-sensitive,
 .tag.not-renewable {
-    background-color: #38b2ac;
+    background-color: #1e40af;
 }
 
 .apply-btn {
