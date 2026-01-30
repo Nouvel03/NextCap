@@ -4,7 +4,7 @@ let isAnimating = false;
 
 const sectionTitles = {
     1: 'Personal Information',
-    2: 'Education Information',
+    2: 'Academic Background',
     3: 'Academic Records',
     4: 'Interests & Skills'
 };
@@ -204,7 +204,8 @@ function validatePage(pageNum) {
         if (existingErr) existingErr.remove();
         input.style.borderColor = '';
 
-        if (val === '') {
+        // Skip optional middle name
+        if (val === '' && input.id !== 'middleName') {
             allValid = false;
             input.style.borderColor = '#e74c3c';
             const err = document.createElement('div');
@@ -214,6 +215,33 @@ function validatePage(pageNum) {
             err.style.fontSize = '12px';
             err.style.marginTop = '6px';
             input.parentElement.appendChild(err);
+        }
+
+        // Special validation
+        if (input.id === 'contact' && val !== '') {
+            // Only allow digits, +, and spaces
+            const cleaned = val.replace(/[^\d+\s]/g, '');
+            if (cleaned !== val) input.value = cleaned;
+        }
+
+        if (input.id === 'gwa' && val !== '') {
+            // Allow numbers only, prevent invalid input
+            let num = parseFloat(val);
+            if (isNaN(num) || num < 1) num = 1;
+            if (num > 5) num = 5;
+            input.value = num.toFixed(2);
+        }
+
+        if (input.id === 'estimatedSalary' && val !== '') {
+            // Keep only digits
+            let num = parseInt(val.replace(/\D/g, ''), 10);
+            if (isNaN(num) || num < 0) num = 0;
+
+            // Cap maximum to 10,000,000
+            const MAX_SALARY = 10000000;
+            if (num > MAX_SALARY) num = MAX_SALARY;
+
+            input.value = num;
         }
     });
 
@@ -228,14 +256,48 @@ function validatePage(pageNum) {
     return allValid;
 }
 
+// Clear field error on input
+// Input listeners for live filtering
 document.addEventListener('input', function (e) {
-    const target = e.target;
-    if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement)) return;
-    const err = target.parentElement && target.parentElement.querySelector('.field-error');
-    if (err && target.value.trim() !== '') {
-        err.remove();
-        target.style.borderColor = '';
+    const el = e.target;
+
+    if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement)) return;
+
+    // Remove negative for numeric fields
+    const nonNegative = ['estimatedSalary', 'yearLevel'];
+    if (nonNegative.includes(el.id)) {
+        el.value = el.value.replace(/-/g, '');
+        if (Number(el.value) < 0) el.value = '';
     }
+
+    // Contact number: only digits, +, space
+    if (el.id === 'contact') {
+        el.value = el.value.replace(/[^\d+\s]/g, '');
+    }
+
+    // GWA: only digits and dot
+    if (el.id === 'gwa') {
+        el.value = el.value.replace(/[^0-9.]/g, '');
+        const parts = el.value.split('.');
+        if (parts.length > 2) el.value = parts[0] + '.' + parts[1]; // prevent multiple dots
+        if (parseFloat(el.value) > 5) el.value = '5.00';
+        if (parseFloat(el.value) < 1) el.value = '1.00';
+    }
+
+    if (el.id === 'estimatedSalary') {
+        el.value = el.value.replace(/\D/g, ''); // digits only
+        let num = parseInt(el.value, 10);
+        if (isNaN(num) || num < 0) num = 0;
+
+        const MAX_SALARY = 10000000;
+        if (num > MAX_SALARY) num = MAX_SALARY;
+
+        el.value = num;
+    }
+
+
+    // Green border when valid
+    if (el.value.trim() !== '') el.style.borderColor = '#10b981';
 });
 
 document.addEventListener('keydown', (e) => {

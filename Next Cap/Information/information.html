@@ -12,7 +12,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <!-- Secrets Config -->
     <script src="../utils/secrets.js"></script>
 
     <!-- Firebase utilities (loads Firestore and exposes helpers) -->
@@ -47,52 +46,57 @@
         <div class="form-card active" data-page="1">
             <div class="form-header">
                 <h2 class="form-title">Complete Your Profile</h2>
-                <span class="save-icon">💾</span>
+                <span class="save-icon" title="Your progress is saved automatically">💾</span>
             </div>
             <p class="form-subtitle">General details about yourself to personalize your experience.</p>
 
             <div class="form-grid">
                 <div class="form-group">
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" placeholder="e.g weinerbuns67">
+                    <input type="text" id="firstName" placeholder="e.g. Juan" autocomplete="given-name">
                 </div>
+
                 <div class="form-group">
-                    <label for="middleName">Middle Name</label>
-                    <input type="text" id="middleName" placeholder="e.g weinerbuns67">
+                    <label for="middleName">Middle Name <span class="optional">(optional)</span></label>
+                    <input type="text" id="middleName" placeholder="e.g. Santos" autocomplete="additional-name">
                 </div>
+
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" placeholder="e.g weinerbuns67">
+                    <input type="text" id="lastName" placeholder="e.g. Dela Cruz" autocomplete="family-name">
                 </div>
 
                 <div class="form-group">
                     <label for="birthday">Birthday</label>
-                    <input type="date" id="birthday" placeholder="" max="">
+                    <input type="date" id="birthday" autocomplete="bday">
+                    <small class="hint">Used to verify age eligibility</small>
                 </div>
+
                 <div class="form-group">
                     <label for="gender">Gender</label>
                     <select id="gender">
-                        <option value="">Select gender</option>
+                        <option value="">Select an option</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Non-binary">Non-binary</option>
                         <option value="Prefer not to say">Prefer not to say</option>
-                        <option value="Other">Other</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="nationality">Nationality / Citizenship</label>
-                    <input type="text" id="nationality" placeholder="e.g weinerbuns67">
+                    <input type="text" id="nationality" placeholder="e.g. Filipino">
                 </div>
 
                 <div class="form-group">
                     <label for="address">Current Address</label>
-                    <input type="text" id="address" placeholder="e.g 123 Example St" autocomplete="street-address">
+                    <input type="text" id="address" placeholder="House no., Street, Barangay">
                 </div>
+
                 <div class="form-group">
                     <label for="contact">Contact Number</label>
-                    <input type="tel" id="contact" placeholder="e.g 09171234567" inputmode="numeric"
-                        pattern="[0-9]{7,15}" title="Enter 7 to 15 digits">
+                    <input type="tel" id="contact" placeholder="e.g. 0917 123 4567" inputmode="numeric" autocomplete="tel">
+                    <small class="hint">We may contact you regarding applications</small>
                 </div>
             </div>
 
@@ -111,7 +115,7 @@
         <div class="form-card" data-page="2">
             <div class="form-header">
                 <h2 class="form-title">Complete Your Profile</h2>
-                <span class="save-icon">💾</span>
+                <span class="save-icon" title="Your progress is saved automatically">💾</span>
             </div>
             <p class="form-subtitle">Your educational background helps us match you with relevant opportunities.</p>
 
@@ -143,7 +147,7 @@
                 </div>
                 <div class="form-group">
                     <label for="yearLevel">Year Level</label>
-                    <input type="number" id="yearLevel" min="1" max="10" step="1" placeholder="e.g 3">
+                    <input type="number" id="yearLevel" min="1" max="4" step="1" placeholder="e.g 3">
                 </div>
             </div>
 
@@ -163,7 +167,7 @@
         <div class="form-card" data-page="3">
             <div class="form-header">
                 <h2 class="form-title">Complete Your Profile</h2>
-                <span class="save-icon">💾</span>
+                <span class="save-icon" title="Your progress is saved automatically">💾</span>
             </div>
             <p class="form-subtitle">Academic and financial information for eligibility verification.</p>
 
@@ -206,7 +210,7 @@
         <div class="form-card" data-page="4">
             <div class="form-header">
                 <h2 class="form-title">Complete Your Profile</h2>
-                <span class="save-icon">💾</span>
+                <span class="save-icon" title="Your progress is saved automatically">💾</span>
             </div>
             <p class="form-subtitle">Add your interests to help us find better scholarship matches (e.g., coding,
                 painting).</p>

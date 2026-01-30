@@ -25,15 +25,23 @@
       }
     })();
   </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
   <div class="logo">
-    <img src="../Login page/images/Group 21.svg" alt="Scholarly Logo">
-  </div>
+    <img src="images/main-logo.svg" alt="NextCap Logo" class="logo-img">
 
-  <div class="cap">
-    <img src="../Login page/images/Group 11.svg" alt="tilted graduation cap">
+    <div class="logo-text">
+      <h1 class="logo-title">NextCap</h1>
+      <p class="logo-subtitle">
+        Advancing Scholarship Applications for Tomorrow’s Leaders
+      </p>
+    </div>
   </div>
 
   <div class="login-container card active" id="login-card">
@@ -51,10 +59,16 @@
     </div>
 
     <div class="form-group">
-      <label for="login-password">Password</label>
-      <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password">
-      <div class="error-message" id="login-password-error"></div>
+      <label for="code">Password</label>
+
+      <div class="password-wrapper">
+        <input type="password" id="code" placeholder="Enter your password">
+        <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+          <img src="images/eye-slash-svgrepo-com.svg" alt="Show password">
+        </button>
+      </div>
     </div>
+
 
     <a href="#" class="forgot-password-link" id="forgot-password-link">Forgot Password?</a>
 
@@ -106,6 +120,9 @@
     <button class="continue-btn" id="reset-pass-btn">Update Password</button>
   </div>
 
+  <div class="bottom-shapes">
+    <img src="images/Group 19.svg">
+  </div>
 
   <!-- Your Firebase init & helpers -->
   <script type="module" src="../FirebaseUtils/FirebaseUtils_Login.js"></script>

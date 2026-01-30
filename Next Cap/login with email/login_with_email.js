@@ -70,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return false;
     }
   }
-
   const loginBtn = document.getElementById('login-btn');
   const loginEmailInput = document.getElementById('login-email');
   const loginPassInput = document.getElementById('login-password');
@@ -105,159 +104,182 @@ document.addEventListener('DOMContentLoaded', () => {
     if (input) input.style.borderColor = '#ddd';
   }
 
+  const passwordInput = document.getElementById("code");
+  const toggleButton = document.querySelector(".toggle-password");
+  const toggleIcon = toggleButton ? toggleButton.querySelector("img") : null;
+
+  if (toggleButton && passwordInput && toggleIcon) {
+    toggleButton.addEventListener("click", () => {
+      const isPassword = passwordInput.type === "password";
+
+      passwordInput.type = isPassword ? "text" : "password";
+      toggleIcon.src = isPassword
+        ? "images/eye-alt-svgrepo-com.svg"
+        : "images/eye-slash-svgrepo-com.svg";
+    });
+  }
+
+  function clearErrors() {
+    loginEmailErr.textContent = '';
+    loginPassErr.textContent = '';
+    loginEmailInput.classList.remove('error');
+    loginPassInput.classList.remove('error');
+  }
+}
+
   if (loginBtn) {
-    loginBtn.addEventListener('click', async () => {
-      clearError(loginEmailErr, loginEmailInput);
-      clearError(loginPassErr, loginPassInput);
+  loginBtn.addEventListener('click', async () => {
+    clearError(loginEmailErr, loginEmailInput);
+    clearError(loginPassErr, loginPassInput);
 
-      const email = loginEmailInput.value.trim();
-      const password = loginPassInput.value;
+    const email = loginEmailInput.value.trim();
+    const password = loginPassInput.value;
 
-      if (!email) return showError(loginEmailErr, 'Email required');
-      if (!password) return showError(loginPassErr, 'Password required');
+    if (!email) return showError(loginEmailErr, 'Email required');
+    if (!password) return showError(loginPassErr, 'Password required');
 
-      if (!window.db) return showError(loginEmailErr, 'Database not init');
+    if (!window.db) return showError(loginEmailErr, 'Database not init');
 
-      try {
-        const usersRef = window.db.collection('USERS');
-        const snapshot = await usersRef.where('email', '==', email).get();
+    try {
+      const usersRef = window.db.collection('USERS');
+      const snapshot = await usersRef.where('email', '==', email).get();
 
-        if (snapshot.empty) return showError(loginEmailErr, 'No account with that email');
+      if (snapshot.empty) return showError(loginEmailErr, 'No account with that email');
 
-        const userDoc = snapshot.docs[0];
-        const data = userDoc.data();
-        const encrypted = data.password;
+      const userDoc = snapshot.docs[0];
+      const data = userDoc.data();
+      const encrypted = data.password;
 
-        let decrypted;
-        try { decrypted = decrypt(encrypted); }
-        catch (e) { return showError(loginPassErr, 'Store password error'); }
+      let decrypted;
+      try { decrypted = decrypt(encrypted); }
+      catch (e) { return showError(loginPassErr, 'Store password error'); }
 
-        if (decrypted === password) {
-          localStorage.setItem('nextcap_user_email', email);
-          const userType = data.type;
+      if (decrypted === password) {
+        localStorage.setItem('nextcap_user_email', email);
+        const userType = data.type;
 
-          if (userType === 'admin') {
-            window.location.href = '../Admin account/indexAdmin.html';
-          } else if (data.account_information && Object.keys(data.account_information).length > 0) {
-            window.location.href = '../Dashboard all/index1.html';
-          } else {
-            window.location.href = '../Information/information.html';
-          }
-        } else {
-          showError(loginPassErr, 'Incorrect password');
-        }
-      } catch (err) {
-        console.error(err);
-        showError(loginEmailErr, 'Login failed');
-      }
-    });
-  }
-
-
-  if (forgotLink) {
-    forgotLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      showCard('forgot-password-card', 'right');
-      currentForgotEmail = '';
-      forgotEmailInput.value = loginEmailInput.value || '';
-    });
-  }
-
-  if (forgotBackBtn) {
-    forgotBackBtn.addEventListener('click', () => {
-      showCard('login-card', 'left');
-    });
-  }
-
-  if (sendOtpBtn) {
-    sendOtpBtn.addEventListener('click', async () => {
-      const email = forgotEmailInput.value.trim();
-      clearError(forgotEmailErr, forgotEmailInput);
-
-      if (!email) return showError(forgotEmailErr, 'Enter email');
-      if (!/\S+@\S+\.\S+/.test(email)) return showError(forgotEmailErr, 'Invalid email');
-
-      sendOtpBtn.disabled = true;
-      sendOtpBtn.textContent = 'Checking...';
-
-      try {
-        const exists = await checkEmailExists(email);
-        if (!exists) {
-          sendOtpBtn.disabled = false;
-          sendOtpBtn.textContent = 'Send Code';
-          return showError(forgotEmailErr, 'No account found with this email');
-        }
-
-        sendOtpBtn.textContent = 'Sending OTP...';
-        const sent = await sendOTPToEmail(email);
-        if (sent) {
-          currentForgotEmail = email;
-          otpDisplayInfo.textContent = email;
-          showCard('forgot-otp-card', 'right');
-        } else {
-          showError(forgotEmailErr, 'Failed to send OTP. Check console/limits.');
-        }
-      } catch (e) {
-        console.error(e);
-        showError(forgotEmailErr, 'Error occurred');
-      } finally {
-        sendOtpBtn.disabled = false;
-        if (currentCard === 'forgot-password-card') sendOtpBtn.textContent = 'Send Code';
-      }
-    });
-  }
-
-  if (otpBackBtn) {
-    otpBackBtn.addEventListener('click', () => {
-      showCard('forgot-password-card', 'left');
-    });
-  }
-
-  if (verifyOtpBtn) {
-    verifyOtpBtn.addEventListener('click', () => {
-      const code = otpInput.value.trim();
-      clearError(otpErr, otpInput);
-
-      if (!code) return showError(otpErr, 'Enter code');
-
-      if (code === generatedOTP) {
-        showCard('reset-password-card', 'right');
-      } else {
-        showError(otpErr, 'Invalid code');
-      }
-    });
-  }
-
-  if (resetPassBtn) {
-    resetPassBtn.addEventListener('click', async () => {
-      const p1 = newPassInput.value;
-      const p2 = confirmPassInput.value;
-      clearError(newPassErr, newPassInput);
-      clearError(confirmPassErr, confirmPassInput);
-
-      if (!p1) return showError(newPassErr, 'Required');
-      if (p1.length < 6) return showError(newPassErr, 'Too short (min 6)');
-      if (p1 !== p2) return showError(confirmPassErr, 'Passwords do not match');
-
-      resetPassBtn.disabled = true;
-      resetPassBtn.textContent = 'Updating...';
-
-      try {
-        const res = await updateUserPassword(currentForgotEmail, p1);
-        if (res.success) {
-          alert('Password updated successfully! Redirecting...');
-          localStorage.setItem('nextcap_user_email', currentForgotEmail); // Auto-login
+        if (userType === 'admin') {
+          window.location.href = '../Admin account/indexAdmin.html';
+        } else if (data.account_information && Object.keys(data.account_information).length > 0) {
           window.location.href = '../Dashboard all/index1.html';
         } else {
-          showError(newPassErr, res.message || 'Update failed');
+          window.location.href = '../Information/information.html';
         }
-      } catch (e) {
-        console.error(e);
-        showError(newPassErr, 'Update failed');
-      } finally {
-        resetPassBtn.disabled = false;
-        resetPassBtn.textContent = 'Update Password';
+      } else {
+        showError(loginPassErr, 'Incorrect password');
       }
-    });
-  }
+    } catch (err) {
+      console.error(err);
+      showError(loginEmailErr, 'Login failed');
+    }
+  });
+}
+
+
+if (forgotLink) {
+  forgotLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showCard('forgot-password-card', 'right');
+    currentForgotEmail = '';
+    forgotEmailInput.value = loginEmailInput.value || '';
+  });
+}
+
+if (forgotBackBtn) {
+  forgotBackBtn.addEventListener('click', () => {
+    showCard('login-card', 'left');
+  });
+}
+
+if (sendOtpBtn) {
+  sendOtpBtn.addEventListener('click', async () => {
+    const email = forgotEmailInput.value.trim();
+    clearError(forgotEmailErr, forgotEmailInput);
+
+    if (!email) return showError(forgotEmailErr, 'Enter email');
+    if (!/\S+@\S+\.\S+/.test(email)) return showError(forgotEmailErr, 'Invalid email');
+
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = 'Checking...';
+
+    try {
+      const exists = await checkEmailExists(email);
+      if (!exists) {
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.textContent = 'Send Code';
+        return showError(forgotEmailErr, 'No account found with this email');
+      }
+
+      sendOtpBtn.textContent = 'Sending OTP...';
+      const sent = await sendOTPToEmail(email);
+      if (sent) {
+        currentForgotEmail = email;
+        otpDisplayInfo.textContent = email;
+        showCard('forgot-otp-card', 'right');
+      } else {
+        showError(forgotEmailErr, 'Failed to send OTP. Check console/limits.');
+      }
+    } catch (e) {
+      console.error(e);
+      showError(forgotEmailErr, 'Error occurred');
+    } finally {
+      sendOtpBtn.disabled = false;
+      if (currentCard === 'forgot-password-card') sendOtpBtn.textContent = 'Send Code';
+    }
+  });
+}
+
+if (otpBackBtn) {
+  otpBackBtn.addEventListener('click', () => {
+    showCard('forgot-password-card', 'left');
+  });
+}
+
+if (verifyOtpBtn) {
+  verifyOtpBtn.addEventListener('click', () => {
+    const code = otpInput.value.trim();
+    clearError(otpErr, otpInput);
+
+    if (!code) return showError(otpErr, 'Enter code');
+
+    if (code === generatedOTP) {
+      showCard('reset-password-card', 'right');
+    } else {
+      showError(otpErr, 'Invalid code');
+    }
+  });
+}
+
+if (resetPassBtn) {
+  resetPassBtn.addEventListener('click', async () => {
+    const p1 = newPassInput.value;
+    const p2 = confirmPassInput.value;
+    clearError(newPassErr, newPassInput);
+    clearError(confirmPassErr, confirmPassInput);
+
+    if (!p1) return showError(newPassErr, 'Required');
+    if (p1.length < 6) return showError(newPassErr, 'Too short (min 6)');
+    if (p1 !== p2) return showError(confirmPassErr, 'Passwords do not match');
+
+    resetPassBtn.disabled = true;
+    resetPassBtn.textContent = 'Updating...';
+
+    try {
+      const res = await updateUserPassword(currentForgotEmail, p1);
+      if (res.success) {
+        alert('Password updated successfully! Redirecting...');
+        localStorage.setItem('nextcap_user_email', currentForgotEmail); // Auto-login
+        window.location.href = '../Dashboard all/index1.html';
+      } else {
+        showError(newPassErr, res.message || 'Update failed');
+      }
+    } catch (e) {
+      console.error(e);
+      showError(newPassErr, 'Update failed');
+    } finally {
+      resetPassBtn.disabled = false;
+      resetPassBtn.textContent = 'Update Password';
+    }
+  });
+}
 });
