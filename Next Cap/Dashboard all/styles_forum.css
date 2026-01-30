@@ -118,9 +118,9 @@
 
 /* Pill Tag Style (Display) */
 .topic-tag {
-    background-color: #1e40af;
+    background-color: rgba(13, 24, 148, 0.1);
     /* Unified Blue */
-    color: white;
+    color: #09116B;
     padding: 4px 10px;
     border-radius: 20px;
     font-weight: 600;
@@ -261,9 +261,9 @@
 
 /* Individual deletable tag pill */
 .added-tag-pill {
-    background-color: #1e40af;
+    background-color: rgba(13, 24, 148, 0.1);
     /* Blue pills */
-    color: white;
+    color: #09116B;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 13px;

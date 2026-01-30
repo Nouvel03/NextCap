@@ -23,7 +23,7 @@ function createTagsHTML(tags) {
   return tags.map(t => {
     const name = typeof t === 'string' ? t : t.name;
     const color = (typeof t === 'object' && t.color) ? t.color : "#1e40af";
-    return `<span class="tag" style="background-color:${color}; display:inline-block; padding:4px 12px; border-radius:20px; color:white; font-size:12px; font-weight:600; margin-right:5px; margin-bottom:5px;">${name}</span>`;
+    return `<span class="tag" style="background-color:rgba(13, 24, 148, 0.1); display:inline-block; padding:4px 12px; border-radius:20px; color:#09116B; font-size:12px; font-weight:600; margin-right:5px; margin-bottom:5px;">${name}</span>`;
   }).join('');
 }
 
@@ -314,13 +314,13 @@ window.viewScholarship = async function (id) {
                             <h2 style="font-size: 28px; font-weight: 800; color: #1a202c; margin: 0 0 10px 0; line-height: 1.2;">
                                 ${s.title}
                             </h2>
-                            ${isApplied ? `<span style="background:#edf2f7; color:#4a5568; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700; text-transform:uppercase;">${currentUserData.applied_scholarships[s.id].status}</span>` : ''}
+                            ${isApplied ? `<span style="background:rgba(13, 24, 148, 0.1); color:#09116B; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700; text-transform:uppercase;">${currentUserData.applied_scholarships[s.id].status}</span>` : ''}
                         </div>
 
-                        <div style="display:flex; gap: 8px; margin-bottom: 20px; flex-wrap:wrap;">
-                             <span style="background-color: #edf2f7; color: #4a5568; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${dateStr}</span>
-                             <span style="background-color: #edf2f7; color: #4a5568; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${s.current_participants || 0} Applicants</span>
-                             <span style="background-color: #ebf8ff; color: #3182ce; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${s.amount_of_participants || 0} Slots</span>
+                         <div style="display:flex; gap: 8px; margin-bottom: 20px; flex-wrap:wrap;">
+                             <span style="background-color: rgba(13, 24, 148, 0.1); color: #09116B; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${dateStr}</span>
+                             <span style="background-color: rgba(13, 24, 148, 0.1); color: #09116B; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${s.current_participants || 0} Applicants</span>
+                             <span style="background-color: rgba(13, 24, 148, 0.1); color: #09116B; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">${s.amount_of_participants || 0} Slots</span>
                         </div>
 
                         <div class="tags" style="margin-bottom: 0;">${createTagsHTML(s.tags)}</div>
@@ -345,7 +345,7 @@ window.viewScholarship = async function (id) {
           `<div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-top: 5px solid #4299e1;">
                                     <h3 style="font-size: 16px; font-weight: 700; color: #2d3748; margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
                                         Requirements
-                                        <span style="font-size:12px; color:#2b6cb0; background:#ebf8ff; padding:2px 8px; border-radius:4px;">Tracker Active</span>
+                                        <span style="font-size:12px; color:#09116B; background:rgba(13, 24, 148, 0.1); padding:2px 8px; border-radius:4px;">Tracker Active</span>
                                     </h3>
                                     <p style="font-size:13px; color:#718096; margin-bottom:20px;">Mark items as you complete them.</p>
                                     

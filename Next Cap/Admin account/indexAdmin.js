@@ -89,7 +89,7 @@ function createAdminCard(id, s) {
     const tagsHTML = (Array.isArray(s.tags) ? s.tags : [])
         .map(t => {
             const label = typeof t === 'string' ? t : t.name;
-            return `<span class="tag" style="background-color:#1e40af; color:white; display:inline-flex; align-items:center; justify-content:center; text-align:center; min-height:24px; white-space:normal; line-height:1.2; word-break: break-word;">${label}</span>`;
+            return `<span class="tag" style="background-color:rgba(13, 24, 148, 0.1); color:#09116B; display:inline-flex; align-items:center; justify-content:center; text-align:center; min-height:24px; white-space:normal; line-height:1.2; word-break: break-word;">${label}</span>`;
         }).join('');
 
     card.innerHTML = `
