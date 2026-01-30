@@ -13,25 +13,34 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <!-- Secrets Config -->
     <script src="../utils/secrets.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
+    
     <div class="logo">
-        <img src="images/Group 21.svg" alt="Scholarly Logo">
-    </div>
+    <img src="images/main-logo.svg" alt="NextCap Logo" class="logo-img">
 
-    <div class="cap">
-        <img src="images/Group 11.svg" alt="tilted graduation cap">
+    <div class="logo-text">
+        <h1 class="logo-title">NextCap</h1>
+        <p class="logo-subtitle">
+        Advancing Scholarship Applications for Tomorrow’s Leaders
+        </p>
+    </div>
     </div>
 
     <div class="login-container">
-        <button class="back-button">
+        <!-- <button class="back-button">
             <img src="images/back-svgrepo-com (1).svg" alt="Back">
-        </button>
+        </button> -->
 
         <h2>Log in or sign up in<br>seconds</h2>
 
-        <button class="login-btn google-btn" id="google-login-btn">
+        <button class="google-btn" id="google-login-btn">
             <img src="images/google-color-svgrepo-com.svg" alt="Google">
             Continue with Google
         </button>
