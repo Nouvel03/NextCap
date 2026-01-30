@@ -1,11 +1,9 @@
 import initAdminPage from './admin.js';
 
-// Initialize the shared admin logic (sidebar, strict auth check)
 initAdminPage();
 
 const db = firebase.firestore();
 
-// Appwrite Init
 const client = new Appwrite.Client();
 const APPWRITE_PROJECT_ID = window.SECRETS.APPWRITE_PROJECT_ID;
 const APPWRITE_BUCKET_ID = window.SECRETS.APPWRITE_BUCKET_ID;
@@ -18,7 +16,6 @@ const storage = new Appwrite.Storage(client);
 
 let currentEditingId = null;
 
-// Main Logic
 document.addEventListener('DOMContentLoaded', () => {
     loadManagedScholarships();
     setupModalListeners();
@@ -182,14 +179,11 @@ function openEditModal(id, data) {
     currentEditingId = id;
     const modal = document.getElementById('edit-modal');
 
-    // Populate fields
     document.getElementById('edit-school-input').value = data.from || '';
     document.getElementById('edit-title-input').value = data.title || '';
     document.getElementById('edit-desc-input').value = data.description || '';
     document.getElementById('edit-slots-input').value = data.amount_of_participants || '';
 
-    // Deadline (handle various formats if needed, assuming ISO or string for now)
-    // indexUpload sets datetime-local, so it expects "YYYY-MM-DDTHH:mm"
     if (data.deadline) {
         document.getElementById('edit-deadline-input').value = data.deadline;
     }
@@ -203,7 +197,6 @@ function openEditModal(id, data) {
         addTagPill(text, tagsContainer);
     });
 
-    // Populate Requirements
     const reqContainer = document.getElementById('edit-req-container');
     reqContainer.innerHTML = '';
     const reqs = Array.isArray(data.requirements) ? data.requirements : [];
@@ -284,7 +277,6 @@ async function updateScholarship() {
 
         await db.collection('SCHOLARSHIPS').doc(currentEditingId).update(updateData);
 
-        alert("Scholarship Updated Successfully!");
         document.getElementById('edit-modal').style.display = 'none';
         loadManagedScholarships();
 

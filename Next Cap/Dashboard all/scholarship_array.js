@@ -274,12 +274,14 @@ window.viewScholarship = async function (id) {
       currentUserData.applied_scholarships &&
       currentUserData.applied_scholarships[s.id];
 
-    let dateStr = "Recently";
-    let timeStr = "";
-    if (s.time_of_creation) {
-      const d = s.time_of_creation.toDate ? s.time_of_creation.toDate() : new Date(s.time_of_creation);
-      dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+    let dateStr = "No Deadline";
+    if (s.deadline) {
+      const d = new Date(s.deadline);
+      if (!isNaN(d.getTime())) {
+        dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      } else {
+        dateStr = s.deadline;
+      }
     }
 
 

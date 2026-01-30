@@ -273,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('[indexUpload] Saving to Firestore:', scholarshipData);
         const docId = await createScholarship(scholarshipData);
 
-        alert('Scholarship Posted Successfully! ID: ' + docId);
 
 
       } catch (err) {
