@@ -12,16 +12,24 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <!-- Secrets Config -->
   <script src="../utils/secrets.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
   <div class="logo">
-    <img src="../Login page/images/Group 21.svg" alt="Scholarly Logo">
-  </div>
+    <img src="images/main-logo.svg" alt="NextCap Logo" class="logo-img">
 
-  <div class="cap">
-    <img src="../Login page/images/Group 11.svg" alt="tilted graduation cap">
-  </div>
+    <div class="logo-text">
+        <h1 class="logo-title">NextCap</h1>
+        <p class="logo-subtitle">
+        Advancing Scholarship Applications for Tomorrow’s Leaders
+        </p>
+    </div>
+    </div>
 
   <div class="login-container card active" id="login-card">
     <button class="back-button" onclick="history.back()">
@@ -38,15 +46,24 @@
     </div>
 
     <div class="form-group">
-      <label for="login-password">Password</label>
-      <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password">
-      <div class="error-message" id="login-password-error"></div>
+    <label for="code">Password</label>
+
+    <div class="password-wrapper">
+        <input type="password" id="code" placeholder="Enter your password">
+        <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+            <img src="images/eye-slash-svgrepo-com.svg" alt="Show password">
+        </button>
     </div>
+</div>
+
 
     <button class="continue-btn" id="login-btn">Log in</button>
     <div class="resend-code"></div>
   </div>
 
+    <div class="bottom-shapes">
+        <img src="images/Group 19.svg">
+    </div>
 
   <!-- Your Firebase init & helpers -->
   <script type="module" src="../FirebaseUtils/FirebaseUtils_Login.js"></script>

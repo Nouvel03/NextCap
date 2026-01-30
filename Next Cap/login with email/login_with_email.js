@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     backBtn.setAttribute('data-wired', 'true');
   }
   const emailInput = document.getElementById('login-email');
-  const passwordInput = document.getElementById('login-password');
+  // const passwordInput = document.getElementById('login-password');
   const loginBtn = document.getElementById('login-btn');
   const emailErr = document.getElementById('login-email-error');
   const passErr = document.getElementById('login-password-error');
@@ -25,6 +25,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const prev = el.previousElementSibling;
     if (prev) prev.classList.add('error');
   }
+
+  const passwordInput = document.getElementById("code");
+  const toggleButton = document.querySelector(".toggle-password");
+  const toggleIcon = toggleButton.querySelector("img");
+
+    toggleButton.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+
+        passwordInput.type = isPassword ? "text" : "password";
+        toggleIcon.src = isPassword
+            ? "images/eye-alt-svgrepo-com.svg"
+            : "images/eye-slash-svgrepo-com.svg";
+    });
+
   function clearErrors() {
     emailErr.textContent = '';
     passErr.textContent = '';

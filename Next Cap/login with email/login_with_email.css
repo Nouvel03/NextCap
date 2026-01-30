@@ -6,16 +6,24 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     background-color: #f5f5f5;
-    padding: 5px;
+
+    min-height: 100vh;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+    overflow: hidden;
 }
 
 .login-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    z-index: 2;
+
     background: white;
     padding: 36px;
     border-radius: 8px;
@@ -40,8 +48,8 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.04);
+    
+    border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .back-button img { width: 16px; height: 16px; display:block; }
@@ -51,28 +59,79 @@ h2 { font-size: 26px; margin-bottom: 12px; color: #333; }
 
 .form-group { margin-bottom: 16px; }
 label { display:block; font-size:14px; color:#333; margin-bottom:6px; }
-input[type="email"], input[type="password"] {
-    width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-size:14px; transition: border-color 0.15s;
+
+input[type="email"] {
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-size:14px;
 }
+
 input:focus { outline:none; border-color:#F4B932; }
 
 .error-message { color:#e74c3c; font-size:12px; margin-top:6px; min-height:16px; }
 
-.continue-btn { width:100%; padding:14px; border:none; border-radius:6px; background:#F4B932; color:#222; font-weight:600; cursor:pointer; }
+.continue-btn { 
+    width:100%; 
+    padding:14px; 
+    border:none; 
+    font-family: 'Monserrat', sans-serif;
+    font-size: 16px;
+    border-radius:10px; 
+    background:#F4B932; 
+    color:#222; 
+    font-weight:600; 
+    cursor:pointer;
+}
 .continue-btn:disabled { opacity:0.6; cursor:not-allowed; }
 
-.logo{
-    position: relative;
+.bottom-shapes {
+    position: absolute;
+    bottom: 0;
     left: 0;
-    top: 0;
+    right: 0;
+    height: 150px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+
+    pointer-events: none;
+    z-index: 0; /*behind */
 }
 
-.cap{
+.logo {
     position: absolute;
-    top: 205px;
-    left: 58vw;
+    top: 10px;
+    left: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    z-index: 3; /* above background shapes */
 }
-.cap img { width: 180px; }
+
+
+.logo-img {
+  width: 75px;
+  height: auto;
+}
+
+.logo-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.logo-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #555;
+  font-family: 'Montserrat', sans-serif;
+}
 
 /* Responsive small screens */
 @media (max-width:420px){
@@ -90,4 +149,54 @@ input:focus { outline:none; border-color:#F4B932; }
     .back-button { width: 34px; height: 34px; }
     .back-button img { width: 16px; height: 16px; }
     .cap { display: none; }
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding: 12px 44px 12px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #000;
+    line-height: 1.2;
+}
+
+.password-wrapper input:focus {
+    outline: none;
+    border-color: #F4B932;
+}
+
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+
+    height: 24px;
+    width: 24px;
+
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.toggle-password img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+}
+
+.toggle-password:hover img {
+    opacity: 1;
 }
