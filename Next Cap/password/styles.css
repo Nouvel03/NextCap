@@ -5,16 +5,25 @@
 }
 
 body {
+    font-family: 'Montserrat', sans-serif;
     background-color: #f5f5f5;
-    padding: 5px;
+
+    min-height: 100vh;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+    overflow: hidden;
 }
 
 
 .login-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    z-index: 2;
+
     background: white;
     padding: 36px;
     border-radius: 8px;
@@ -74,7 +83,7 @@ label {
     font-weight: 500;
 }
 
-input[type="text"] {
+input[type="password"] {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -83,7 +92,7 @@ input[type="text"] {
     color: #000000;
 }
 
-input[type="text"]:focus {
+input[type="password"]:focus {
     outline: none;
     border-color: #F4B932;
 }
@@ -185,16 +194,51 @@ img { max-width: 100%; height: auto; display: block; }
     justify-content: center;
 }
 
-.logo{
-    position: relative;
-    left: 0;
-    top: 0;
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    z-index: 3; /* above background shapes */
 }
 
-.cap{
+
+.logo-img {
+  width: 75px;
+  height: auto;
+}
+
+.logo-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.logo-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #555;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.bottom-shapes {
     position: absolute;
-    top: 205px;
-    left: 58vw;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+
+    pointer-events: none;
+    z-index: 0; /*behind */
 }
 
 @media (max-width: 480px) {
@@ -202,4 +246,49 @@ img { max-width: 100%; height: auto; display: block; }
     .back-button { width: 34px; height: 34px; }
     .back-button img { width: 16px; height: 16px; }
     .cap { display: none; }
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 44px; /* space for eye icon */
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #000000;
+}
+
+.password-wrapper input:focus {
+    outline: none;
+    border-color: #F4B932;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+}
+
+.toggle-password:hover img {
+    opacity: 1;
 }
