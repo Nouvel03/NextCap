@@ -5,7 +5,7 @@
 }
 
 body {
-   font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     background-color: #f5f5f5;
 
     min-height: 100vh;
@@ -16,7 +16,7 @@ body {
     justify-content: center;
 
     position: relative;
-    overflow: hidden;   
+    overflow: hidden;
 }
 
 .login-container {
@@ -67,23 +67,51 @@ body {
 }
 
 @keyframes slideOutRight {
-   from { opacity: 1; transform: translateX(0) scale(1); }
-  to   { opacity: 0; transform: translateX(-120%) scale(0.98); }
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-120%) scale(0.98);
+    }
 }
 
 @keyframes slideOutLeft {
-   from { opacity: 1; transform: translateX(0) scale(1); }
-  to   { opacity: 0; transform: translateX(-120%) scale(0.98); }
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-120%) scale(0.98);
+    }
 }
 
 @keyframes slideInLeft {
-   from { opacity: 1; transform: translateX(0) scale(1); }
-  to   { opacity: 0; transform: translateX(-120%) scale(0.98); }
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-120%) scale(0.98);
+    }
 }
 
 @keyframes slideInRight {
-    from { opacity: 1; transform: translateX(0) scale(1); }
-  to   { opacity: 0; transform: translateX(-120%) scale(0.98); }
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-120%) scale(0.98);
+    }
 }
 
 .back-button {
@@ -306,8 +334,9 @@ input[type="password"]:focus {
     justify-content: space-around;
     align-items: flex-end;
 
-    pointer-events: none;   
-    z-index: 0; /*behind */
+    pointer-events: none;
+    z-index: 0;
+    /*behind */
 }
 
 .logo {
@@ -319,32 +348,47 @@ input[type="password"]:focus {
     align-items: center;
     gap: 12px;
 
-    z-index: 3; /* above background shapes */
+    z-index: 3;
+    /* above background shapes */
 }
 
 
 .logo-img {
-  width: 75px;
-  height: auto;
+    width: 75px;
+    height: auto;
 }
 
 .logo-title {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .logo-subtitle {
-  margin: 2px 0 0;
-  font-size: 12px;
-  color: #555;
-  font-family: 'Montserrat', sans-serif;
-}   
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #555;
+    font-family: 'Montserrat', sans-serif;
+}
 
 @media (max-width: 480px) {
-    .login-container { padding: 20px; width: calc(100% - 32px); }
-    .back-button { width: 34px; height: 34px; }
-    .back-button img { width: 16px; height: 16px; }
-    .cap { display: none; }
+    .login-container {
+        padding: 20px;
+        width: calc(100% - 32px);
+    }
+
+    .back-button {
+        width: 34px;
+        height: 34px;
+    }
+
+    .back-button img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .cap {
+        display: none;
+    }
 }
