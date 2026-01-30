@@ -21,124 +21,15 @@ body {
 }
 
 .login-container {
-    --anim-duration: 420ms;
-    --anim-ease: cubic-bezier(0.16, 0.84, 0.24, 1);
+    position: relative;
+    z-index: 2;
 
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.985);
     background: white;
     padding: 36px;
     border-radius: 8px;
-    box-shadow: 0 8px 30px rgba(12, 22, 33, 0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: min(92%, 420px);
     max-width: 420px;
-
-    /* Animation Initial State */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--anim-duration) var(--anim-ease), transform calc(var(--anim-duration) * 1.05) var(--anim-ease), box-shadow var(--anim-duration) var(--anim-ease);
-    will-change: transform, opacity;
-}
-
-/* Card switching logic */
-.card {
-    display: none !important;
-}
-
-/* Active card becomes visible */
-.card.active {
-    display: block !important;
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-    box-shadow: 0 18px 50px rgba(12, 22, 33, 0.12);
-}
-
-/* Slide animations */
-.slide-out-right {
-    animation: slideOutRight var(--anim-duration) var(--anim-ease) forwards;
-}
-
-.slide-out-left {
-    animation: slideOutLeft var(--anim-duration) var(--anim-ease) forwards;
-}
-
-.slide-in-left {
-    animation: slideInLeft var(--anim-duration) var(--anim-ease) forwards;
-}
-
-.slide-in-right {
-    animation: slideInRight var(--anim-duration) var(--anim-ease) forwards;
-}
-
-@keyframes slideOutRight {
-    from {
-        opacity: 1;
-        transform: translate(-50%, -50%) translateX(0) scale(1);
-    }
-
-    50% {
-        opacity: 0.65;
-        transform: translate(-50%, -50%) translateX(-20%) scale(0.995);
-    }
-
-    to {
-        opacity: 0;
-        transform: translate(-50%, -50%) translateX(-110%) scale(0.99);
-    }
-}
-
-@keyframes slideOutLeft {
-    from {
-        opacity: 1;
-        transform: translate(-50%, -50%) translateX(0) scale(1);
-    }
-
-    50% {
-        opacity: 0.65;
-        transform: translate(-50%, -50%) translateX(20%) scale(0.995);
-    }
-
-    to {
-        opacity: 0;
-        transform: translate(-50%, -50%) translateX(110%) scale(0.99);
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) translateX(120%) scale(0.99);
-    }
-
-    60% {
-        opacity: 1;
-        transform: translate(-50%, -50%) translateX(-6%) scale(1.002);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) translateX(0) scale(1);
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) translateX(-120%) scale(0.99);
-    }
-
-    60% {
-        opacity: 1;
-        transform: translate(-50%, -50%) translateX(6%) scale(1.002);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) translateX(0) scale(1);
-    }
 }
 
 .login-container.card {
@@ -158,210 +49,216 @@ body {
     justify-content: center;
     cursor: pointer;
 
-    .password-wrapper {
-        position: relative;
-        width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.back-button img {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+h2 {
+    font-size: 26px;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 18px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #F4B932;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 6px;
+    min-height: 16px;
+}
+
+.continue-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    font-family: 'Monserrat', sans-serif;
+    font-size: 16px;
+    border-radius: 10px;
+    background: #F4B932;
+    color: #222;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.continue-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bottom-shapes {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+
+    pointer-events: none;
+    z-index: 0;
+    /*behind */
+}
+
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    z-index: 3;
+    /* above background shapes */
+}
+
+
+.logo-img {
+    width: 75px;
+    height: auto;
+}
+
+.logo-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.logo-subtitle {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #555;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Responsive small screens */
+@media (max-width:420px) {
+    .login-container {
+        width: 92%;
+        padding: 24px;
+    }
+}
+
+@media (max-width:480px) {
+    .back-button {
+        width: 34px;
+        height: 34px;
     }
 
-    .password-wrapper input {
-        width: 100%;
-        padding: 12px 44px 12px 12px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 14px;
-        color: #000;
-        line-height: 1.2;
+    .back-button img {
+        width: 16px;
+        height: 16px;
     }
 
-    .password-wrapper input:focus {
-        outline: none;
-        border-color: #F4B932;
+    .cap {
+        display: none;
+    }
+}
+
+@media (max-width:720px) {
+    .login-container {
+        padding: 20px;
+        width: calc(100% - 32px);
     }
 
-    .toggle-password {
-        position: absolute;
-        top: 50%;
-        right: 12px;
-        transform: translateY(-50%);
-        height: 24px;
-        width: 24px;
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .back-button {
+        width: 34px;
+        height: 34px;
     }
 
-    .toggle-password img {
-        width: 20px;
-        height: 20px;
-        opacity: 0.6;
+    .back-button img {
+        width: 16px;
+        height: 16px;
     }
 
-    .toggle-password:hover img {
-        opacity: 1;
+    .cap {
+        display: none;
     }
+}
 
-    h2 {
+.password-wrapper {
+    position: relative;
+}
 
-        pointer-events: none;
-        z-index: 0;
-        /*behind */
-    }
+.password-wrapper input {
+    width: 100%;
+    padding: 12px 44px 12px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #000;
+    line-height: 1.2;
+}
 
-    <<<<<<< HEAD .cap {
-        =======.logo {
-            >>>>>>>origin/design_branch position: absolute;
-            top: 10px;
-            left: 10px;
-
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            z-index: 3;
-            /* above background shapes */
-        }
-
-
-        .logo-img {
-            width: 75px;
-            height: auto;
-        }
-
-        .logo-title {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .logo-subtitle {
-            margin: 2px 0 0;
-            font-size: 12px;
-            color: #555;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        <<<<<<< HEAD .cap img {
-            width: 180px;
-        }
-
-        =======>>>>>>>origin/design_branch
-
-        /* Responsive small screens */
-        @media (max-width:420px) {
-            .login-container {
-                width: 92%;
-                padding: 24px;
-            }
-        }
-
-        @media (max-width:480px) {
-            .back-button {
-                width: 34px;
-                height: 34px;
-            }
-
-            .back-button img {
-                width: 16px;
-                height: 16px;
-            }
-
-            .cap {
-                display: none;
-            }
-        }
-
-        @media (max-width:720px) {
-            <<<<<<< HEAD .login-container {
-                padding: 20px;
-                width: calc(100% - 32px);
-            }
-
-            .back-button {
-                width: 34px;
-                height: 34px;
-            }
-
-            .back-button img {
-                width: 16px;
-                height: 16px;
-            }
-
-            .cap {
-                display: none;
-            }
-
-            =======.login-container {
-                padding: 20px;
-                width: calc(100% - 32px);
-            }
-
-            .back-button {
-                width: 34px;
-                height: 34px;
-            }
-
-            .back-button img {
-                width: 16px;
-                height: 16px;
-            }
-
-            .cap {
-                display: none;
-            }
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-wrapper input {
-            width: 100%;
-            padding: 12px 44px 12px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #000;
-            line-height: 1.2;
-        }
-
-        .password-wrapper input:focus {
-            outline: none;
-            border-color: #F4B932;
-        }
+.password-wrapper input:focus {
+    outline: none;
+    border-color: #F4B932;
+}
 
 
-        .toggle-password {
-            position: absolute;
-            top: 50%;
-            right: 12px;
-            transform: translateY(-50%);
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
 
-            height: 24px;
-            width: 24px;
+    height: 24px;
+    width: 24px;
 
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 
-        .toggle-password img {
-            width: 20px;
-            height: 20px;
-            opacity: 0.6;
-        }
+.toggle-password img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+}
 
-        .toggle-password:hover img {
-            opacity: 1;
-            >>>>>>>origin/design_branch
-        }
+.toggle-password:hover img {
+    opacity: 1;
+}
